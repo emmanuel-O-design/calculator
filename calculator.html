@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>calculator</title>
+    
+</head>
+<body class="container-m"> 
+    <style>
+        body{
+         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+         font-weight: 10;
+        padding: auto;
+        background-color: gray;    
+        }
+
+        .calculator{
+            grid-template-columns: 4;
+        }
+        #btn-c{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+        
+        #btnforplus{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+         #btn-{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+         #btnfordiv{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btnformul{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btn-del{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btn-1{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btn-2{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btn-3{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btn-4{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btn-5{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btn-6{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btn-7{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btn-8{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btn-9{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btn-0{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+
+        #btnforeq{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+        }
+    </style>
+    <div class="calculator" >
+        <div class="container">
+        <div class="row">
+        <div class="col">
+    <input type="text" id="display" readonly>
+            <div class="row">
+                <div class="col bg-black">
+    <button onclick="cleardisply()" id="btn-c">c</button>
+        </div>
+</div>
+    <button onclick="appendvalue('+')" id="btnforplus">+</button>
+    <button onclick="appendvalue('-')" id="btn-">-</button>
+    <button onclick="appendvalue('/')" id="btnfordiv">/</button>
+    <button onclick="appendvalue('*')" id="btnformul">x</button>
+    <button onclick="deletelast()" id="btn-del">del</button>
+    <button onclick="appendvalue('1')" id="btn-1">1</button>
+    <button onclick="appendvalue('2')" id="btn-2">2</button>
+    <button onclick="appendvalue('3')" id="btn-3">3</button>
+    <button onclick="appendvalue('4')" id="btn-4">4</button>
+    <button onclick="appendvalue('5')" id="btn-5">5</button>
+    <button onclick="appendvalue('6')" id="btn-6">6</button>
+    <button onclick="appendvalue('7')" id="btn-7">7</button>
+    <button onclick="appendvalue('8')" id="btn-8">8</button>
+    <button onclick="appendvalue('9')" id="btn-9">9</button>
+    <button onclick="appendvalue('0')" id="btn-0">0</button>
+    <button onclick="calculate()" id="btnforeq">=</button>
+        </div>   
+</div>
+
+    <script>
+        const display = document.getElementById("display")
+        function deletelast(){
+            display.value= display.value.slice(0,-1)
+        }
+
+        function appendvalue(value){
+            display.value += value
+        }
+
+        function cleardisply() {
+            display.value = ""
+         
+        }
+
+        function calculate() {
+    display.value = eval(display.value);
+        }
+        </script>
+</html>
