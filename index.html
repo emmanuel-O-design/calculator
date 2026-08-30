@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>calculator</title>
-    
+    <title>calculator</title>    
 </head>
 <body class="container-m"> 
     <style>
         body{
+        background-image: url(./image/ChatGPT\ Image\ Aug\ 29\,\ 2026\,\ 02_59_17\ PM.png);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
          font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
          font-weight: 10;
-        padding: auto;
-        background-color: gray;    
+        padding: auto; 
         }
 
         .calculator{
+        justify-content: center;
             grid-template-columns: 4;
         }
+
         #btn-c{
             background-color: white;
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
         
         #btnforplus{
@@ -30,6 +36,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
          #btn-{
@@ -37,6 +44,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
          #btnfordiv{
@@ -44,6 +52,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btnformul{
@@ -51,6 +60,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btn-del{
@@ -58,6 +68,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btn-1{
@@ -65,6 +76,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btn-2{
@@ -72,6 +84,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btn-3{
@@ -79,6 +92,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btn-4{
@@ -86,6 +100,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btn-5{
@@ -93,6 +108,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btn-6{
@@ -100,6 +116,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btn-7{
@@ -107,6 +124,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btn-8{
@@ -114,6 +132,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btn-9{
@@ -121,6 +140,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btn-0{
@@ -128,6 +148,7 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
 
         #btnforeq{
@@ -135,37 +156,189 @@
             box-shadow: white;
             height: 100px;
             width: 100px;
+            border-radius: 20px;
         }
-    </style>
-    <div class="calculator" >
-        <div class="container">
-        <div class="row">
-        <div class="col">
-    <input type="text" id="display" readonly>
-            <div class="row">
-                <div class="col bg-black">
-    <button onclick="cleardisply()" id="btn-c">c</button>
-        </div>
-</div>
-    <button onclick="appendvalue('+')" id="btnforplus">+</button>
-    <button onclick="appendvalue('-')" id="btn-">-</button>
-    <button onclick="appendvalue('/')" id="btnfordiv">/</button>
-    <button onclick="appendvalue('*')" id="btnformul">x</button>
-    <button onclick="deletelast()" id="btn-del">del</button>
+        
+        #btn-√{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+            border-radius: 20px;
+        }
+
+        #btnup{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+            border-radius: 20px;
+        }
+
+        #btn-±{
+            background-color: white;
+            box-shadow: white;
+            height: 100px;
+            width: 100px;
+            border-radius: 20px;
+        }
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 10px;
+    width: max-content;
+    margin: 0 auto;
+}
+
+input {
+    width: 540px;
+    height: 100px;
+    border-radius: 50px;
+    box-shadow: black;
+    display: block;
+    margin: 0 auto;
+    font-size: 50px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+.error {
+    animation: shake 0.4s;
+    box-shadow: 0 0 15px red, 0 0 30px red;
+    border: 3px solid red;
+}
+
+.buttons.shake button {
+    animation: shake 0.4s;
+}
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-8px);
+    }
+
+    40% {
+        transform: translateX(8px);
+    }
+
+    60% {
+        transform: translateX(-6px);
+    }
+
+    80% {
+        transform: translateX(6px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+    #display {
+    border: 2px solid cyan;
+    outline: none;
+    animation: electric 1.5s infinite;
+}
+
+@keyframes electric {
+    0% {
+        border-color: cyan;
+        box-shadow: 0 0 5px cyan;
+    }
+
+    25% {
+        border-color: #00ff88;
+        box-shadow: 0 0 8px #00ff88;
+    }
+
+    50% {
+        border-color: #9d00ff;
+        box-shadow: 0 0 5px #9d00ff;
+    }
+
+    75% {
+        border-color: #ff0080;
+        box-shadow: 0 0 8px #ff0080;
+    }
+
+    100% {
+        border-color: cyan;
+        box-shadow: 0 0 5px cyan;
+    }
+}
+
+    button:hover {
+    animation: buttonElectric 1.5s infinite;
+}
+
+@keyframes buttonElectric {
+    0% {
+        border-color: cyan;
+        box-shadow: 0 0 5px cyan;
+    }
+
+    25% {
+        border-color: #00ff88;
+        box-shadow: 0 0 8px #00ff88;
+    }
+
+    50% {
+        border-color: #9d00ff;
+        box-shadow: 0 0 5px #9d00ff;
+    }
+
+    75% {
+        border-color: #ff0080;
+        box-shadow: 0 0 8px #ff0080;
+    }
+
+    100% {
+        border-color: cyan;
+        box-shadow: 0 0 5px cyan;
+    }
+}
+
+ </style>
+
+   <input type="text" class="electric-input" id="display" readonly>
+   
+    
+    <div class="buttons">
     <button onclick="appendvalue('1')" id="btn-1">1</button>
     <button onclick="appendvalue('2')" id="btn-2">2</button>
     <button onclick="appendvalue('3')" id="btn-3">3</button>
     <button onclick="appendvalue('4')" id="btn-4">4</button>
-    <button onclick="appendvalue('5')" id="btn-5">5</button>
+    <button onclick="appendvalue('-')" id="btn-">-</button>
+    
+    
     <button onclick="appendvalue('6')" id="btn-6">6</button>
     <button onclick="appendvalue('7')" id="btn-7">7</button>
     <button onclick="appendvalue('8')" id="btn-8">8</button>
     <button onclick="appendvalue('9')" id="btn-9">9</button>
-    <button onclick="appendvalue('0')" id="btn-0">0</button>
-    <button onclick="calculate()" id="btnforeq">=</button>
-        </div>   
-</div>
+    <button onclick="appendvalue('+')" id="btnforplus">+</button>
+    
 
+    <button onclick="appendvalue('0')" id="btn-0">0</button>
+    <button onclick="appendvalue('5')" id="btn-5">5</button>
+    <button onclick="appendvalue('/')" id="btnfordiv">/</button>
+    <button onclick="appendvalue('*')" id="btnformul">x</button>
+    <button onclick="deletelast()" id="btn-del">del</button>
+    <button onclick="appendvalue('±')" id="btn-±">±</button>
+    
+    <button onclick="cleardisply()" id="btn-c">c</button>
+    <button onclick="appendvalue('√')" id="btn-√">√</button>
+    <button onclick="appendvalue('^')" id="btnup">^</button>
+    <button onclick="calculate()" id="btnforeq">=</button>
+        </div>
+    </div>   
+</div>
+</div>
     <script>
         const display = document.getElementById("display")
         function deletelast(){
@@ -173,16 +346,33 @@
         }
 
         function appendvalue(value){
-            display.value += value
+            display.value += value;
+            display.scrollLeft = display.scrollWidth;
         }
 
         function cleardisply() {
             display.value = ""
-         
         }
 
-        function calculate() {
-    display.value = eval(display.value);
-        }
+function calculate() {
+    try {
+        display.value = eval(display.value);
+    } catch {
+        display.value = "ERROR!";
+        
+        display.classList.add("error");
+        document.querySelector(".buttons").classList.add("shake");
+
+        setTimeout(function() {
+       display.classList.remove("error");
+       document.querySelector(".buttons").classList.remove("shake");
+            display.value = "";
+        }, 1500);
+    }
+}
+
+    
         </script>
-</html>
+        </head>
+        </body>
+</html> 
