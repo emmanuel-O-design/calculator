@@ -303,7 +303,16 @@ input {
         box-shadow: 0 0 5px cyan;
     }
 }
-
+    @media only screen and (max-width: 600px){
+    .container-m{
+        display: none !important;
+    }
+}
+@media only screen and (min-width: 1280px){
+    .row{
+        display:flex;
+    }  
+}
  </style>
 
    <input type="text" class="electric-input" id="display" readonly>
@@ -370,8 +379,16 @@ function calculate() {
         }, 1500);
     }
 }
+    const buttons = document.querySelectorAll("button");
 
-    
+    const clickSound = new Audio("./click-sound/click-sound.mp3");
+
+buttons.forEach(function(button) {
+    button.addEventListener("click", function() {
+        clickSound.currentTime = 0;
+        clickSound.play();
+    });
+});
         </script>
         </head>
         </body>
