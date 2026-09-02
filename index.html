@@ -23,15 +23,7 @@
             grid-template-columns: 4;
         }
 
-        #btn-c{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-        
-        #btnforplus{
+        .number-btn{
             background-color: white;
             box-shadow: white;
             height: 100px;
@@ -39,161 +31,9 @@
             border-radius: 20px;
         }
 
-         #btn-{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-         #btnfordiv{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btnformul{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btn-del{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btn-1{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btn-2{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btn-3{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btn-4{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btn-5{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btn-6{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btn-7{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btn-8{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btn-9{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btn-0{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btnforeq{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-        
-        #btn-√{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btnup{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-        #btn-±{
-            background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
-        }
-
-.buttons {
-    display: grid;
-    grid-template-columns: repeat(5, 100px);
-    grid-template-rows: repeat(3, 100px);
-    gap: 10px;
-    width: max-content;
-    margin: 0 auto;
-}
 
 input {
-    width: 540px;
+    width: 550px;
     height: 100px;
     border-radius: 50px;
     box-shadow: black;
@@ -240,6 +80,7 @@ input {
     }
 }
 
+
     #display {
     border: 2px solid cyan;
     outline: none;
@@ -273,7 +114,7 @@ input {
     }
 }
 
-    button:hover {
+    .number-btn:hover {
     animation: buttonElectric 1.5s infinite;
 }
 
@@ -313,40 +154,93 @@ input {
         display:flex;
     }  
 }
+
+    #menuBtn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    transition: left 0.4s ease;
+    width: 40px;
+    height: 40px;
+    border-radius: 100px;
+    background: transparent;
+    border: none;
+    color: white;
+}
+
+#sideMenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background: #000;
+
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+
+    z-index: 1000;
+    padding-top: 80px;
+}
+
+#sideMenu a {
+    display: block;
+    padding: 20px;
+    color: white;
+}
+
+/* OPEN */
+#sideMenu.open {
+    transform: translateX(0);
+}
+
+#menuBtn.open {
+    left: 270px;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+     width: 521px;
+    margin: 0 auto;
+}
  </style>
 
-   <input type="text" class="electric-input" id="display" readonly>
-   
-    
-    <div class="buttons">
-    <button onclick="appendvalue('1')" id="btn-1">1</button>
-    <button onclick="appendvalue('2')" id="btn-2">2</button>
-    <button onclick="appendvalue('3')" id="btn-3">3</button>
-    <button onclick="appendvalue('4')" id="btn-4">4</button>
-    <button onclick="appendvalue('-')" id="btn-">-</button>
-    
-    
-    <button onclick="appendvalue('6')" id="btn-6">6</button>
-    <button onclick="appendvalue('7')" id="btn-7">7</button>
-    <button onclick="appendvalue('8')" id="btn-8">8</button>
-    <button onclick="appendvalue('9')" id="btn-9">9</button>
-    <button onclick="appendvalue('+')" id="btnforplus">+</button>
-    
+     <input type="text" class="electric-input" id="display" readonly>
+<div class="buttons" id="calc-buttons">
+    <button class="number-btn" onclick="appendvalue('1')">1</button>
+    <button class="number-btn" onclick="appendvalue('2')">2</button>
+    <button class="number-btn" onclick="appendvalue('3')">3</button>
+    <button class="number-btn" onclick="appendvalue('4')">4</button>
+    <button class="number-btn" onclick="appendvalue('5')">5</button>
 
-    <button onclick="appendvalue('0')" id="btn-0">0</button>
-    <button onclick="appendvalue('5')" id="btn-5">5</button>
-    <button onclick="appendvalue('/')" id="btnfordiv">/</button>
-    <button onclick="appendvalue('*')" id="btnformul">x</button>
-    <button onclick="deletelast()" id="btn-del">del</button>
-    <button onclick="appendvalue('±')" id="btn-±">±</button>
-    
-    <button onclick="cleardisply()" id="btn-c">c</button>
-    <button onclick="appendvalue('√')" id="btn-√">√</button>
-    <button onclick="appendvalue('^')" id="btnup">^</button>
-    <button onclick="calculate()" id="btnforeq">=</button>
-        </div>
-    </div>   
+    <button class="number-btn" onclick="appendvalue('6')">6</button>
+    <button class="number-btn" onclick="appendvalue('7')">7</button>
+    <button class="number-btn" onclick="appendvalue('8')">8</button>
+    <button class="number-btn" onclick="appendvalue('9')">9</button>
+    <button class="number-btn" onclick="appendvalue('0')">0</button>
+
+    <button class="number-btn" onclick="appendvalue('.')">.</button>
+    <button class="number-btn" onclick="appendvalue('+')">+</button>
+    <button class="number-btn" onclick="appendvalue('-')">-</button>
+    <button class="number-btn" onclick="appendvalue('*')">×</button>
+    <button class="number-btn" onclick="appendvalue('/')">÷</button>
+
+    <button class="number-btn" onclick="appendvalue('(')">(</button>
+    <button class="number-btn" onclick="appendvalue(')')">)</button>
+    <button class="number-btn" onclick="appendvalue('%')">%</button>
+    <button class="number-btn" onclick="deletelast()">⌫</button>
+    <button class="number-btn" onclick="calculate()">=</button>
+</div>   
 </div>
+<button id="menuBtn" onclick="toggleMenu()">☰</button>
+
+<div id="sideMenu">
+    <a href="./QUIZ.html">QUIZ</a>
+    <a href="./GAMES.html">🧩 GAMES</a>
+    <a href="./SETTINGS.html">⚙ SETTINGS</a>
 </div>
     <script>
         const display = document.getElementById("display")
@@ -377,11 +271,14 @@ function calculate() {
        document.querySelector(".buttons").classList.remove("shake");
             display.value = "";
         }, 1500);
-    }
+    }     
 }
-    const buttons = document.querySelectorAll("button");
 
-    const clickSound = new Audio("./click-sound/click-sound.mp3");
+const clickSound = new Audio("./click-sound/click-sound.mp3");
+
+document.getElementById("calc-buttons").onclick = function() {
+    clickSound.play();
+};
 
 buttons.forEach(function(button) {
     button.addEventListener("click", function() {
@@ -389,7 +286,12 @@ buttons.forEach(function(button) {
         clickSound.play();
     });
 });
-        </script>
+
+function toggleMenu() {
+    document.getElementById("sideMenu").classList.toggle("open");
+    document.getElementById("menuBtn").classList.toggle("open");
+}
+ </script>
         </head>
         </body>
 </html> 
