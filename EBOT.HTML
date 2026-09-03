@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Bot</title>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #080808;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .ebot-header {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 0 25px;
+            background: #111;
+            border-bottom: 1px solid #333;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        .ebot-title {
+            position: absolute;
+            font-size: 28px;
+            font-weight: bold;
+            left: 40%;
+        }
+
+        .chat-area {
+            height: calc(100vh - 180px);
+            overflow-y: auto;
+            padding: 25px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+        }
+
+        .bot-message {
+            background: #1b1b1b;
+            margin-right: auto;
+        }
+
+        .user-message {
+            background: #333;
+            margin-left: auto;
+        }
+
+        .input-area {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: #111;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        .message-input {
+            flex: 1;
+            height: 45px;
+            border-radius: 25px;
+            border: 1px solid #444;
+            background: #222;
+            color: white;
+            padding: 0 18px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .action-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: #222;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .send-btn {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="ebot-header">
+
+        <button class="back-btn" onclick="goBack()">←</button>
+
+        <div class="ebot-title">
+            EPMATH-BOT🤖
+        </div>
+
+    </header>
+
+
+    <main class="chat-area" id="chatArea">
+
+        <div class="message bot-message">
+            👋 Hi! I'm E-Bot. Ask me anything about mathematics!
+        </div>
+
+    </main>
+
+
+    <div class="input-area">
+
+        <button class="action-btn" title="Upload picture">
+            📷
+        </button>
+
+        <button class="action-btn" title="Voice">
+            🎤
+        </button>
+
+        <input
+            type="text"
+            class="message-input"
+            id="messageInput"
+            placeholder="Ask a math question..."
+        >
+
+        <button class="action-btn send-btn" onclick="sendMessage()">
+            ➤
+        </button>
+
+    </div>
+
+
+    <script>
+
+        function goBack() {
+            window.location.href = "index.html";
+        }
+
+
+async function sendMessage() {
+
+    const input = document.getElementById("messageInput");
+    const chatArea = document.getElementById("chatArea");
+
+    const message = input.value.trim();
+
+    if (message === "") {
+        return;
+    }
+
+    // Show user's message
+    const userMessage = document.createElement("div");
+    userMessage.className = "message user-message";
+    userMessage.textContent = message;
+    chatArea.appendChild(userMessage);
+
+    input.value = "";
+
+    // Show thinking message
+    const botMessage = document.createElement("div");
+    botMessage.className = "message bot-message";
+    botMessage.textContent = "🤔 E-Bot is thinking...";
+    chatArea.appendChild(botMessage);
+
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+    try {
+
+const response = await fetch("/.netlify/functions/ask-ai", {
+    method: "POST",
+
+    headers: {
+        "Content-Type": "application/json"
+    },
+
+    body: JSON.stringify({
+        question: message
+    })
+});
+
+const data = await response.json();
+
+if (data.answer) {
+    botMessage.textContent = data.answer;
+} else {
+    botMessage.textContent = "❌ Sorry, I couldn't solve that.";
+}
+
+    } catch (error) {
+
+        console.error(error);
+
+        botMessage.textContent =
+            "❌ E-Bot couldn't connect right now.";
+
+    }
+
+    chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+
+        document.getElementById("messageInput").addEventListener("keydown", function(event) {
+
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>

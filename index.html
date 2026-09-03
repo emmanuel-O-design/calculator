@@ -209,6 +209,9 @@ input {
  </style>
 
      <input type="text" class="electric-input" id="display" readonly>
+
+  <button onclick="openEBot()">🤖 E-Bot</button>
+
 <div class="buttons" id="calc-buttons">
     <button class="number-btn" onclick="appendvalue('1')">1</button>
     <button class="number-btn" onclick="appendvalue('2')">2</button>
@@ -240,6 +243,7 @@ input {
 <div id="sideMenu">
     <a href="./QUIZ.html">QUIZ</a>
     <a href="./GAMES.html">🧩 GAMES</a>
+    <a href="./EBOT.html">🤖 E-BOT</a>
     <a href="./SETTINGS.html">⚙ SETTINGS</a>
 </div>
     <script>
@@ -290,6 +294,10 @@ buttons.forEach(function(button) {
 function toggleMenu() {
     document.getElementById("sideMenu").classList.toggle("open");
     document.getElementById("menuBtn").classList.toggle("open");
+}
+
+    function openEBot() {
+    window.location.href = "ebot.html";
 }
  </script>
         </head>
