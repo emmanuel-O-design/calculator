@@ -5,53 +5,71 @@ exports.handler = async (event) => {
     if (!question) {
       return {
         statusCode: 400,
-        body: JSON.stringify({
-          error: "Please enter a math question."
-        })
+        body: JSON.stringify({ error: "No question provided" })
       };
     }
 
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-5-mini",
-        instructions: "You are EPMATH-BOT, also called E-Bot. You are a mathematics-only AI assistant. Only answer questions about mathematics. You can solve arithmetic, algebra, equations, geometry, trigonometry, calculus, statistics, probability, fractions, percentages, decimals, and mathematical word problems. Explain your working when useful. Always carefully calculate the answer. If the user asks about something that is not mathematics, say: Sorry, I'm E-Bot and I can only help with mathematics. Be friendly and easy to understand.",
-        input: question
-      })
-    });
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": process.env.GEMINI_API_KEY
+        },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [
+              {
+                text: "You are E-Bot, a friendly math AI. You only answer questions about mathematics. If the user asks about something unrelated to math, politely tell them that you can only help with math. Show clear steps when solving problems."
+              }
+            ]
+          },
+          contents: [
+            {
+              parts: [
+                {
+                  text: question
+                }
+              ]
+            }
+          ]
+        })
+      }
+    );
 
     const data = await response.json();
 
-    console.log("OpenAI response:", JSON.stringify(data));
-
     if (!response.ok) {
+      console.error("Gemini error:", data);
+
       return {
         statusCode: response.status,
         body: JSON.stringify({
-          error: data.error?.message || "OpenAI request failed."
+          error: "Gemini API error",
+          details: data
         })
       };
     }
 
+    const answer =
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "Sorry, I couldn't find an answer.";
+
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        answer: data.output_text || "I couldn't generate an answer."
-      })
+      body: JSON.stringify({ answer })
     };
 
   } catch (error) {
-    console.error("E-Bot error:", error);
+    console.error("Function error:", error);
 
     return {
       statusCode: 500,
       body: JSON.stringify({
-        error: "E-Bot encountered an error."
+        error: "E-Bot couldn't connect right now."
       })
     };
   }
 };
+```
