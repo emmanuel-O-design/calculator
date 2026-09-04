@@ -5,6 +5,7 @@ exports.handler = async (event) => {
     const question = body.question || "";
     const image = body.image || null;
     const mimeType = body.mimeType || null;
+    const history = Array.isArray(body.history) ? body.history : [];
 
     if (!question && !image) {
       return {
@@ -15,18 +16,71 @@ exports.handler = async (event) => {
       };
     }
 
-    const parts = [];
+    // =====================================
+    // BUILD CONVERSATION HISTORY
+    // =====================================
 
-    // Add text question if there is one
+    const contents = [];
+
+    for (const message of history) {
+
+      if (
+        !message ||
+        (message.role !== "user" && message.role !== "model")
+      ) {
+        continue;
+      }
+
+      const historyParts = [];
+
+      // Add saved text
+      if (
+        typeof message.text === "string" &&
+        message.text.trim() !== ""
+      ) {
+        historyParts.push({
+          text: message.text
+        });
+      }
+
+      // Add saved image
+      if (
+        message.image &&
+        message.mimeType
+      ) {
+        historyParts.push({
+          inlineData: {
+            mimeType: message.mimeType,
+            data: message.image
+          }
+        });
+      }
+
+      // Only add the message if it has something
+      if (historyParts.length > 0) {
+
+        contents.push({
+          role: message.role,
+          parts: historyParts
+        });
+
+      }
+    }
+
+    // =====================================
+    // CURRENT MESSAGE
+    // =====================================
+
+    const currentParts = [];
+
     if (question) {
-      parts.push({
+      currentParts.push({
         text: question
       });
     }
 
-    // Add image if one was provided
     if (image && mimeType) {
-      parts.push({
+      currentParts.push({
         inlineData: {
           mimeType: mimeType,
           data: image
@@ -34,52 +88,74 @@ exports.handler = async (event) => {
       });
     }
 
+    contents.push({
+      role: "user",
+      parts: currentParts
+    });
+
+    // =====================================
+    // SEND TO GEMINI
+    // =====================================
+
     const response = await fetch(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent",
       {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
           "x-goog-api-key": process.env.GEMINI_API_KEY
         },
+
         body: JSON.stringify({
+
           systemInstruction: {
             parts: [
               {
-              text:
-                "You are E-Bot, a math assistant. " +
-                "You ONLY help with mathematics. " +
-                "Do NOT greet the user automatically. " +
-                "Answer the user's question directly. " +
-                "Use simple, clean, easy-to-read language. " +
-                "Avoid unnecessary symbols, emojis, hashtags, asterisks, markdown, bullet points, and decorative formatting. " +
-                "Do not use Markdown formatting. " +
-                "Write explanations as normal sentences and short paragraphs. " +
-                "Use mathematical symbols only when they are necessary to show the actual math. " +
-                "Explain the solution clearly and step by step. " +
-                "You can solve math problems from text or pictures. " +
-                "Read mathematical expressions, equations, graphs, diagrams, and handwritten math from images when possible. " +
-                "If the user asks about something unrelated to mathematics, politely say that you only help with math."
+                text:
+                  "You are E-Bot, a math assistant. " +
+                  "You ONLY help with mathematics. " +
+                  "Do NOT greet the user automatically. " +
+                  "Answer the user's question directly. " +
+
+                  "Remember the conversation history, including previous math problems and images. " +
+                  "When the user refers to a previous answer, problem, equation, number, image, or result, use the relevant information from the conversation history. " +
+                  "Understand references such as 'that', 'it', 'the previous answer', 'the answer in the picture', and 'now divide it'. " +
+
+                  "Use simple, clean, easy-to-read language. " +
+                  "Avoid unnecessary symbols, emojis, hashtags, asterisks, markdown, bullet points, and decorative formatting. " +
+                  "Do not use Markdown formatting. " +
+                  "Write explanations as normal sentences and short paragraphs. " +
+                  "Use mathematical symbols only when they are necessary to show the actual math. " +
+                  "Explain the solution clearly and step by step. " +
+
+                  "You can solve math problems from text or pictures. " +
+                  "Read mathematical expressions, equations, graphs, diagrams, and handwritten math from images when possible. " +
+
+                  "If the user asks about something unrelated to mathematics, politely say that you only help with math."
               }
             ]
           },
-          contents: [
-            {
-              role: "user",
-              parts: parts
-            }
-          ]
+
+          contents: contents
+
         })
       }
     );
 
+    // =====================================
+    // READ GEMINI RESPONSE
+    // =====================================
+
     const data = await response.json();
 
     if (!response.ok) {
+
       console.error("Gemini API error:", data);
 
       return {
         statusCode: response.status,
+
         body: JSON.stringify({
           error: "Gemini API error.",
           details: data
@@ -90,18 +166,26 @@ exports.handler = async (event) => {
     const answer =
       data.candidates?.[0]?.content?.parts?.[0]?.text;
 
+    // =====================================
+    // SEND ANSWER BACK TO WEBSITE
+    // =====================================
+
     return {
       statusCode: 200,
+
       body: JSON.stringify({
-        answer: answer || "I couldn't solve that math problem."
+        answer:
+          answer || "I couldn't solve that math problem."
       })
     };
 
   } catch (error) {
+
     console.error("Function error:", error);
 
     return {
       statusCode: 500,
+
       body: JSON.stringify({
         error: "E-Bot couldn't connect right now."
       })

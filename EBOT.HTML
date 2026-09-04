@@ -144,16 +144,22 @@
             placeholder="Ask a math question..."
         >
 
-        <button class="action-btn send-btn" onclick="sendMessage()">
+        <button
+            class="action-btn send-btn"
+            onclick="sendMessage()"
+        >
             ➤
         </button>
 
     </div>
+
+
 <script>
 
 function goBack() {
     window.location.href = "index.html";
 }
+
 
 const input = document.getElementById("messageInput");
 const chatArea = document.getElementById("chatArea");
@@ -161,151 +167,340 @@ const pictureBtn = document.getElementById("pictureBtn");
 const micBtn = document.getElementById("micBtn");
 
 
+let conversationHistory = [];
+
+
+
 // =============================
 // SEND TEXT / IMAGE TO E-BOT
 // =============================
 
-async function sendMessage(question = null, imageData = null, mimeType = null) {
+async function sendMessage(
+    question = null,
+    imageData = null,
+    mimeType = null
+) {
 
     const message = question !== null
         ? question.trim()
         : input.value.trim();
 
-    // Don't send if nothing was provided
+
     if (message === "" && !imageData) {
         return;
     }
 
-    // Show user's text
+
+
+    // =============================
+    // SHOW USER TEXT
+    // =============================
+
     if (message !== "") {
-        const userMessage = document.createElement("div");
-        userMessage.className = "message user-message";
+
+        const userMessage =
+            document.createElement("div");
+
+        userMessage.className =
+            "message user-message";
+
         userMessage.textContent = message;
+
         chatArea.appendChild(userMessage);
     }
 
+
+
     input.value = "";
 
-    // Show image indicator if image was selected
-    if (imageData) {
-        const imageMessage = document.createElement("div");
-        imageMessage.className = "message user-message";
 
-        const img = document.createElement("img");
-        img.src = "data:" + mimeType + ";base64," + imageData;
+
+    // =============================
+    // SHOW USER IMAGE
+    // =============================
+
+    if (imageData) {
+
+        const imageMessage =
+            document.createElement("div");
+
+        imageMessage.className =
+            "message user-message";
+
+
+        const img =
+            document.createElement("img");
+
+
+        img.src =
+            "data:" +
+            mimeType +
+            ";base64," +
+            imageData;
+
+
         img.style.maxWidth = "250px";
         img.style.maxHeight = "250px";
         img.style.borderRadius = "10px";
 
+
         imageMessage.appendChild(img);
+
         chatArea.appendChild(imageMessage);
     }
 
-    // Thinking message
-    const botMessage = document.createElement("div");
-    botMessage.className = "message bot-message";
-    botMessage.textContent = "🤔 E-Bot is thinking...";
+
+
+    // =============================
+    // THINKING MESSAGE
+    // =============================
+
+    const botMessage =
+        document.createElement("div");
+
+    botMessage.className =
+        "message bot-message";
+
+    botMessage.textContent =
+        "🤔 E-Bot is thinking...";
+
+
     chatArea.appendChild(botMessage);
 
-    chatArea.scrollTop = chatArea.scrollHeight;
+    chatArea.scrollTop =
+        chatArea.scrollHeight;
+
+
 
     try {
 
-        const response = await fetch("/.netlify/functions/ask-ai", {
-            method: "POST",
+        const response =
+            await fetch(
+                "/.netlify/functions/ask-ai",
+                {
+                    method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-            body: JSON.stringify({
-                question: message,
-                image: imageData,
-                mimeType: mimeType
-            })
-        });
+                    body: JSON.stringify({
 
-        const data = await response.json();
+                        question: message,
+
+                        image: imageData,
+
+                        mimeType: mimeType,
+
+                        history:
+                            conversationHistory
+
+                    })
+                }
+            );
+
+
+
+        // =============================
+        // GET AI RESPONSE
+        // =============================
+
+        const data =
+            await response.json();
+
+
 
         if (data.answer) {
-            botMessage.textContent = data.answer;
+
+            botMessage.textContent =
+                data.answer;
+
+
+
+            // =============================
+            // SAVE USER MESSAGE
+            // TEXT + IMAGE TOGETHER
+            // =============================
+
+            conversationHistory.push({
+
+                role: "user",
+
+                text: message,
+
+                image:
+                    imageData || null,
+
+                mimeType:
+                    mimeType || null
+
+            });
+
+
+
+            // =============================
+            // SAVE E-BOT'S ANSWER
+            // =============================
+
+            conversationHistory.push({
+
+                role: "model",
+
+                text: data.answer
+
+            });
+
+
+
+            // =============================
+            // KEEP MEMORY MANAGEABLE
+            // =============================
+
+            if (conversationHistory.length > 10) {
+
+                conversationHistory =
+                    conversationHistory.slice(-10);
+
+            }
+
+
         } else {
-            console.error("E-Bot error:", data);
-            botMessage.textContent = "❌ Sorry, I couldn't solve that.";
+
+            console.error(
+                "E-Bot error:",
+                data
+            );
+
+
+            botMessage.textContent =
+                "❌ Sorry, I couldn't solve that.";
+
         }
+
 
     } catch (error) {
 
-        console.error("Connection error:", error);
+        console.error(
+            "Connection error:",
+            error
+        );
+
 
         botMessage.textContent =
             "❌ E-Bot couldn't connect right now.";
+
     }
 
-    chatArea.scrollTop = chatArea.scrollHeight;
+
+    chatArea.scrollTop =
+        chatArea.scrollHeight;
+
 }
+
 
 
 // =============================
 // ENTER KEY
 // =============================
 
-input.addEventListener("keydown", function(event) {
+input.addEventListener(
+    "keydown",
+    function(event) {
 
-    if (event.key === "Enter") {
-        sendMessage();
+        if (event.key === "Enter") {
+
+            sendMessage();
+
+        }
+
     }
+);
 
-});
 
 
 // =============================
 // PICTURE BUTTON
 // =============================
 
-pictureBtn.addEventListener("click", function() {
+pictureBtn.addEventListener(
+    "click",
+    function() {
 
-    const fileInput = document.createElement("input");
+        const fileInput =
+            document.createElement("input");
 
-    fileInput.type = "file";
-    fileInput.accept = "image/*";
 
-    fileInput.onchange = function(event) {
+        fileInput.type = "file";
 
-        const file = event.target.files[0];
+        fileInput.accept =
+            "image/*";
 
-        if (!file) {
-            return;
-        }
 
-        // Make sure it is an image
-        if (!file.type.startsWith("image/")) {
-            alert("Please select an image.");
-            return;
-        }
+        fileInput.onchange =
+            function(event) {
 
-        const reader = new FileReader();
+                const file =
+                    event.target.files[0];
 
-        reader.onload = function() {
 
-            // FileReader gives us:
-            // data:image/png;base64,......
-            // We only want the base64 part
+                if (!file) {
+                    return;
+                }
 
-            const base64 = reader.result.split(",")[1];
 
-            sendMessage(
-                "Solve the math problem in this image. Show me the steps.",
-                base64,
-                file.type
-            );
-        };
 
-        reader.readAsDataURL(file);
-    };
+                // Make sure it is an image
 
-    fileInput.click();
-});
+                if (!file.type.startsWith("image/")) {
+
+                    alert(
+                        "Please select an image."
+                    );
+
+                    return;
+                }
+
+
+
+                const reader =
+                    new FileReader();
+
+
+
+                reader.onload =
+                    function() {
+
+                        const base64 =
+                            reader.result
+                                .split(",")[1];
+
+
+
+                        sendMessage(
+
+                            "Solve the math problem in this image. Show me the steps.",
+
+                            base64,
+
+                            file.type
+
+                        );
+
+                    };
+
+
+
+                reader.readAsDataURL(file);
+
+            };
+
+
+        fileInput.click();
+
+    }
+);
+
 
 
 // =============================
@@ -316,75 +511,136 @@ const SpeechRecognition =
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
 
+
+
 if (SpeechRecognition) {
 
-    const recognition = new SpeechRecognition();
+    const recognition =
+        new SpeechRecognition();
 
-    recognition.lang = "en-US";
-    recognition.continuous = false;
-    recognition.interimResults = false;
 
-    micBtn.addEventListener("click", function() {
+    recognition.lang =
+        "en-US";
 
-        try {
-            recognition.start();
 
-            micBtn.textContent = "🔴";
-            micBtn.title = "Listening...";
+    recognition.continuous =
+        false;
 
-        } catch (error) {
-            console.log("Microphone already running.");
+
+    recognition.interimResults =
+        false;
+
+
+
+    micBtn.addEventListener(
+        "click",
+        function() {
+
+            try {
+
+                recognition.start();
+
+                micBtn.textContent =
+                    "🔴";
+
+                micBtn.title =
+                    "Listening...";
+
+            } catch (error) {
+
+                console.log(
+                    "Microphone already running."
+                );
+
+            }
+
         }
-
-    });
-
-
-    recognition.onresult = function(event) {
-
-        const spokenText =
-            event.results[0][0].transcript;
-
-        input.value = spokenText;
-
-        // Automatically send the voice question
-        sendMessage(spokenText);
-
-    };
+    );
 
 
-    recognition.onend = function() {
 
-        micBtn.textContent = "🎤";
-        micBtn.title = "Voice input";
+    recognition.onresult =
+        function(event) {
 
-    };
+            const spokenText =
+                event.results[0][0]
+                    .transcript;
 
 
-    recognition.onerror = function(event) {
+            input.value =
+                spokenText;
 
-        console.error("Speech recognition error:", event.error);
 
-        micBtn.textContent = "🎤";
-        micBtn.title = "Voice input";
+            sendMessage(
+                spokenText
+            );
 
-        if (event.error === "not-allowed") {
-            alert("Please allow microphone access for E-Bot.");
-        }
+        };
 
-    };
+
+
+    recognition.onend =
+        function() {
+
+            micBtn.textContent =
+                "🎤";
+
+            micBtn.title =
+                "Voice input";
+
+        };
+
+
+
+    recognition.onerror =
+        function(event) {
+
+            console.error(
+                "Speech recognition error:",
+                event.error
+            );
+
+
+            micBtn.textContent =
+                "🎤";
+
+
+            micBtn.title =
+                "Voice input";
+
+
+
+            if (
+                event.error ===
+                "not-allowed"
+            ) {
+
+                alert(
+                    "Please allow microphone access for E-Bot."
+                );
+
+            }
+
+        };
+
 
 } else {
 
-    micBtn.addEventListener("click", function() {
+    micBtn.addEventListener(
+        "click",
+        function() {
 
-        alert(
-            "Voice input is not supported by this browser. Try Google Chrome or Microsoft Edge."
-        );
+            alert(
+                "Voice input is not supported by this browser. Try Google Chrome or Microsoft Edge."
+            );
 
-    });
+        }
+    );
 
 }
 
 </script>
+
 </body>
 </html>
+
