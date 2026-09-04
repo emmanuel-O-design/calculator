@@ -57,14 +57,6 @@ exports.handler = async (event) => {
       "Sorry, I couldn't find an answer.";
 
     return {
-      statusCode: 200,
-      body: JSON.stringify({ answer })
-    };
-
-  } catch (error) {
-    console.error("Function error:", error);
-
-    return {
       statusCode: 500,
       body: JSON.stringify({
         error: "E-Bot couldn't connect right now."
@@ -72,4 +64,4 @@ exports.handler = async (event) => {
     };
   }
 };
-```
+
