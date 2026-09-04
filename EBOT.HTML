@@ -129,11 +129,11 @@
 
     <div class="input-area">
 
-        <button class="action-btn" title="Upload picture">
+        <button class="action-btn" id="pictureBtn">
             📷
         </button>
 
-        <button class="action-btn" title="Voice">
+        <button class="action-btn" id="micBtn">
             🎤
         </button>
 
@@ -149,35 +149,59 @@
         </button>
 
     </div>
+<script>
+
+function goBack() {
+    window.location.href = "index.html";
+}
+
+const input = document.getElementById("messageInput");
+const chatArea = document.getElementById("chatArea");
+const pictureBtn = document.getElementById("pictureBtn");
+const micBtn = document.getElementById("micBtn");
 
 
-    <script>
+// =============================
+// SEND TEXT / IMAGE TO E-BOT
+// =============================
 
-        function goBack() {
-            window.location.href = "index.html";
-        }
+async function sendMessage(question = null, imageData = null, mimeType = null) {
 
+    const message = question !== null
+        ? question.trim()
+        : input.value.trim();
 
-async function sendMessage() {
-
-    const input = document.getElementById("messageInput");
-    const chatArea = document.getElementById("chatArea");
-
-    const message = input.value.trim();
-
-    if (message === "") {
+    // Don't send if nothing was provided
+    if (message === "" && !imageData) {
         return;
     }
 
-    // Show user's message
-    const userMessage = document.createElement("div");
-    userMessage.className = "message user-message";
-    userMessage.textContent = message;
-    chatArea.appendChild(userMessage);
+    // Show user's text
+    if (message !== "") {
+        const userMessage = document.createElement("div");
+        userMessage.className = "message user-message";
+        userMessage.textContent = message;
+        chatArea.appendChild(userMessage);
+    }
 
     input.value = "";
 
-    // Show thinking message
+    // Show image indicator if image was selected
+    if (imageData) {
+        const imageMessage = document.createElement("div");
+        imageMessage.className = "message user-message";
+
+        const img = document.createElement("img");
+        img.src = "data:" + mimeType + ";base64," + imageData;
+        img.style.maxWidth = "250px";
+        img.style.maxHeight = "250px";
+        img.style.borderRadius = "10px";
+
+        imageMessage.appendChild(img);
+        chatArea.appendChild(imageMessage);
+    }
+
+    // Thinking message
     const botMessage = document.createElement("div");
     botMessage.className = "message bot-message";
     botMessage.textContent = "🤔 E-Bot is thinking...";
@@ -187,48 +211,180 @@ async function sendMessage() {
 
     try {
 
-const response = await fetch("/.netlify/functions/ask-ai", {
-    method: "POST",
+        const response = await fetch("/.netlify/functions/ask-ai", {
+            method: "POST",
 
-    headers: {
-        "Content-Type": "application/json"
-    },
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-    body: JSON.stringify({
-        question: message
-    })
-});
+            body: JSON.stringify({
+                question: message,
+                image: imageData,
+                mimeType: mimeType
+            })
+        });
 
-const data = await response.json();
+        const data = await response.json();
 
-if (data.answer) {
-    botMessage.textContent = data.answer;
-} else {
-    botMessage.textContent = "❌ Sorry, I couldn't solve that.";
-}
+        if (data.answer) {
+            botMessage.textContent = data.answer;
+        } else {
+            console.error("E-Bot error:", data);
+            botMessage.textContent = "❌ Sorry, I couldn't solve that.";
+        }
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Connection error:", error);
 
         botMessage.textContent =
             "❌ E-Bot couldn't connect right now.";
-
     }
 
     chatArea.scrollTop = chatArea.scrollHeight;
 }
 
 
-        document.getElementById("messageInput").addEventListener("keydown", function(event) {
+// =============================
+// ENTER KEY
+// =============================
 
-            if (event.key === "Enter") {
-                sendMessage();
-            }
+input.addEventListener("keydown", function(event) {
 
-        });
+    if (event.key === "Enter") {
+        sendMessage();
+    }
 
-    </script>
+});
 
+
+// =============================
+// PICTURE BUTTON
+// =============================
+
+pictureBtn.addEventListener("click", function() {
+
+    const fileInput = document.createElement("input");
+
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+
+    fileInput.onchange = function(event) {
+
+        const file = event.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        // Make sure it is an image
+        if (!file.type.startsWith("image/")) {
+            alert("Please select an image.");
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function() {
+
+            // FileReader gives us:
+            // data:image/png;base64,......
+            // We only want the base64 part
+
+            const base64 = reader.result.split(",")[1];
+
+            sendMessage(
+                "Solve the math problem in this image. Show me the steps.",
+                base64,
+                file.type
+            );
+        };
+
+        reader.readAsDataURL(file);
+    };
+
+    fileInput.click();
+});
+
+
+// =============================
+// MICROPHONE BUTTON
+// =============================
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "en-US";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    micBtn.addEventListener("click", function() {
+
+        try {
+            recognition.start();
+
+            micBtn.textContent = "🔴";
+            micBtn.title = "Listening...";
+
+        } catch (error) {
+            console.log("Microphone already running.");
+        }
+
+    });
+
+
+    recognition.onresult = function(event) {
+
+        const spokenText =
+            event.results[0][0].transcript;
+
+        input.value = spokenText;
+
+        // Automatically send the voice question
+        sendMessage(spokenText);
+
+    };
+
+
+    recognition.onend = function() {
+
+        micBtn.textContent = "🎤";
+        micBtn.title = "Voice input";
+
+    };
+
+
+    recognition.onerror = function(event) {
+
+        console.error("Speech recognition error:", event.error);
+
+        micBtn.textContent = "🎤";
+        micBtn.title = "Voice input";
+
+        if (event.error === "not-allowed") {
+            alert("Please allow microphone access for E-Bot.");
+        }
+
+    };
+
+} else {
+
+    micBtn.addEventListener("click", function() {
+
+        alert(
+            "Voice input is not supported by this browser. Try Google Chrome or Microsoft Edge."
+        );
+
+    });
+
+}
+
+</script>
 </body>
 </html>
