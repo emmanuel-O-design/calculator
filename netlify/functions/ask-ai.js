@@ -1,15 +1,37 @@
 exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body || "{}");
-    const question = body.question;
 
-    if (!question) {
+    const question = body.question || "";
+    const image = body.image || null;
+    const mimeType = body.mimeType || null;
+
+    if (!question && !image) {
       return {
         statusCode: 400,
         body: JSON.stringify({
-          error: "No question provided."
+          error: "Please provide a math question or an image."
         })
       };
+    }
+
+    const parts = [];
+
+    // Add text question if there is one
+    if (question) {
+      parts.push({
+        text: question
+      });
+    }
+
+    // Add image if one was provided
+    if (image && mimeType) {
+      parts.push({
+        inlineData: {
+          mimeType: mimeType,
+          data: image
+        }
+      });
     }
 
     const response = await fetch(
@@ -24,18 +46,20 @@ exports.handler = async (event) => {
           systemInstruction: {
             parts: [
               {
-                text: "You are E-Bot, a friendly math assistant. You ONLY answer mathematics questions. Explain calculations clearly and step by step when useful. If the user asks about something that is not mathematics, politely say that you can only help with math."
+                text:
+                  "You are E-Bot, a friendly math assistant. " +
+                  "You ONLY help with mathematics. " +
+                  "You can solve math problems from text or pictures. " +
+                  "Read mathematical expressions, equations, graphs, diagrams, and handwritten math from images when possible. " +
+                  "Explain the solution clearly and step by step. " +
+                  "If the user asks about something unrelated to mathematics, politely say that you only help with math."
               }
             ]
           },
           contents: [
             {
               role: "user",
-              parts: [
-                {
-                  text: question
-                }
-              ]
+              parts: parts
             }
           ]
         })
@@ -57,17 +81,12 @@ exports.handler = async (event) => {
     }
 
     const answer =
-      data.candidates &&
-      data.candidates[0] &&
-      data.candidates[0].content &&
-      data.candidates[0].content.parts &&
-      data.candidates[0].content.parts[0] &&
-      data.candidates[0].content.parts[0].text;
+      data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        answer: answer || "I couldn't generate an answer."
+        answer: answer || "I couldn't solve that math problem."
       })
     };
 
