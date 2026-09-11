@@ -3,303 +3,376 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>calculator</title>    
-</head>
-<body class="container-m"> 
+    <title>calculator</title>
+
     <style>
-        body{
-        background-image: url(./image/ChatGPT\ Image\ Aug\ 29\,\ 2026\,\ 02_59_17\ PM.png);
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-         font-weight: 10;
-        padding: auto; 
+        * {
+            box-sizing: border-box;
         }
 
-        .calculator{
-        justify-content: center;
-            grid-template-columns: 4;
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
-        .number-btn{
+        body {
+            min-height: 100vh;
+            height: 100vh;
+            background-image: url("./image/ChatGPT Image Aug 29, 2026, 02_59_17 PM.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        #display {
+            width: min(550px, 94vw);
+            height: clamp(65px, 12vh, 100px);
+            border-radius: 30px;
+            display: block;
+            margin: clamp(70px, 10vh, 100px) auto 25px;
+            font-size: clamp(30px, 5vw, 50px);
+            padding: 10px 20px;
+            text-align: right;
+            overflow-x: auto;
+            white-space: nowrap;
+            border: 2px solid cyan;
+            outline: none;
+            animation: electric 1.5s infinite;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: clamp(5px, 1vw, 10px);
+            width: min(521px, 94vw);
+            margin: 0 auto;
+        }
+
+        .number-btn {
+            width: 100%;
+            aspect-ratio: 1 / 1;
             background-color: white;
-            box-shadow: white;
-            height: 100px;
-            width: 100px;
-            border-radius: 20px;
+            border: 2px solid transparent;
+            border-radius: clamp(12px, 3vw, 20px);
+            font-size: clamp(18px, 4vw, 30px);
+            cursor: pointer;
+            transition: transform 0.1s ease;
         }
 
+        .number-btn:hover {
+            animation: buttonElectric 1.5s infinite;
+        }
 
-input {
-    width: 550px;
-    height: 100px;
-    border-radius: 50px;
-    box-shadow: black;
-    display: block;
-    margin: 0 auto;
-    font-size: 50px;
-    padding-bottom: 10px;
-    margin-top: 20px;
-    margin-bottom: 50px;
-}
+        .number-btn:active,
+        .number-btn.pressed {
+            transform: scale(0.92);
+        }
 
-.error {
-    animation: shake 0.4s;
-    box-shadow: 0 0 15px red, 0 0 30px red;
-    border: 3px solid red;
-}
+        .error {
+            animation: shake 0.4s, errorBlink 0.5s infinite;
+            border: 3px solid red !important;
+        }
 
-.buttons.shake button {
-    animation: shake 0.4s;
-}
-@keyframes shake {
-    0% {
-        transform: translateX(0);
-    }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+            100% { transform: translateX(0); }
+        }
 
-    20% {
-        transform: translateX(-8px);
-    }
+        @keyframes errorBlink {
+            0%, 100% {
+                box-shadow: 0 0 5px red;
+            }
+            50% {
+                box-shadow: 0 0 25px red;
+            }
+        }
 
-    40% {
-        transform: translateX(8px);
-    }
+        @keyframes electric {
+            0% {
+                border-color: cyan;
+                box-shadow: 0 0 5px cyan;
+            }
 
-    60% {
-        transform: translateX(-6px);
-    }
+            25% {
+                border-color: #00ff88;
+                box-shadow: 0 0 8px #00ff88;
+            }
 
-    80% {
-        transform: translateX(6px);
-    }
+            50% {
+                border-color: #9d00ff;
+                box-shadow: 0 0 5px #9d00ff;
+            }
 
-    100% {
-        transform: translateX(0);
-    }
-}
+            75% {
+                border-color: #ff0080;
+                box-shadow: 0 0 8px #ff0080;
+            }
 
+            100% {
+                border-color: cyan;
+                box-shadow: 0 0 5px cyan;
+            }
+        }
 
-    #display {
-    border: 2px solid cyan;
-    outline: none;
-    animation: electric 1.5s infinite;
-}
+        @keyframes buttonElectric {
+            0% {
+                border-color: cyan;
+                box-shadow: 0 0 5px cyan;
+            }
 
-@keyframes electric {
-    0% {
-        border-color: cyan;
-        box-shadow: 0 0 5px cyan;
-    }
+            25% {
+                border-color: #00ff88;
+                box-shadow: 0 0 8px #00ff88;
+            }
 
-    25% {
-        border-color: #00ff88;
-        box-shadow: 0 0 8px #00ff88;
-    }
+            50% {
+                border-color: #9d00ff;
+                box-shadow: 0 0 5px #9d00ff;
+            }
 
-    50% {
-        border-color: #9d00ff;
-        box-shadow: 0 0 5px #9d00ff;
-    }
+            75% {
+                border-color: #ff0080;
+                box-shadow: 0 0 8px #ff0080;
+            }
 
-    75% {
-        border-color: #ff0080;
-        box-shadow: 0 0 8px #ff0080;
-    }
+            100% {
+                border-color: cyan;
+                box-shadow: 0 0 5px cyan;
+            }
+        }
 
-    100% {
-        border-color: cyan;
-        box-shadow: 0 0 5px cyan;
-    }
-}
+        #menuBtn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 25px;
+            cursor: pointer;
+            transition: left 0.4s ease;
+        }
 
-    .number-btn:hover {
-    animation: buttonElectric 1.5s infinite;
-}
+        #menuBtn.open {
+            left: 270px;
+        }
 
-@keyframes buttonElectric {
-    0% {
-        border-color: cyan;
-        box-shadow: 0 0 5px cyan;
-    }
+        #sideMenu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #000;
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+            z-index: 1000;
+            padding-top: 80px;
+        }
 
-    25% {
-        border-color: #00ff88;
-        box-shadow: 0 0 8px #00ff88;
-    }
+        #sideMenu.open {
+            transform: translateX(0);
+        }
 
-    50% {
-        border-color: #9d00ff;
-        box-shadow: 0 0 5px #9d00ff;
-    }
+        #sideMenu a {
+            display: block;
+            padding: 20px;
+            color: white;
+            text-decoration: none;
+        }
 
-    75% {
-        border-color: #ff0080;
-        box-shadow: 0 0 8px #ff0080;
-    }
+        #ebotButton {
+            position: fixed;
+            right: clamp(10px, 2vw, 25px);
+            bottom: clamp(10px, 2vw, 25px);
+            width: clamp(60px, 10vw, 100px);
+            height: clamp(60px, 10vw, 100px);
+            padding: 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 999;
+        }
 
-    100% {
-        border-color: cyan;
-        box-shadow: 0 0 5px cyan;
-    }
-}
-    @media only screen and (max-width: 600px){
-    .container-m{
-        display: none !important;
-    }
-}
-@media only screen and (min-width: 1280px){
-    .row{
-        display:flex;
-    }  
-}
+        #button-bot {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            border-radius: 50%;
+        }
 
-    #menuBtn {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 1001;
-    transition: left 0.4s ease;
-    width: 40px;
-    height: 40px;
-    border-radius: 100px;
-    background: transparent;
-    border: none;
-    color: white;
-}
+        @media (max-width: 600px) {
+            #display {
+                width: 94vw;
+                margin-top: 70px;
+                margin-bottom: 20px;
+            }
 
-#sideMenu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 250px;
-    height: 100vh;
-    background: #000;
+            .buttons {
+                width: 94vw;
+                gap: 5px;
+            }
 
-    transform: translateX(-100%);
-    transition: transform 0.4s ease;
+            .number-btn {
+                border-radius: 14px;
+                font-size: 22px;
+            }
 
-    z-index: 1000;
-    padding-top: 80px;
-}
+            #sideMenu {
+                width: 80vw;
+            }
 
-#sideMenu a {
-    display: block;
-    padding: 20px;
-    color: white;
-}
+            #menuBtn.open {
+                left: 82vw;
+            }
+        }
 
-/* OPEN */
-#sideMenu.open {
-    transform: translateX(0);
-}
+        @media (max-width: 350px) {
+            #display {
+                width: 92vw;
+                font-size: 25px;
+            }
 
-#menuBtn.open {
-    left: 270px;
-}
+            .buttons {
+                width: 92vw;
+                gap: 4px;
+            }
 
-.buttons {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-     width: 521px;
-    margin: 0 auto;
-}
- </style>
+            .number-btn {
+                font-size: 18px;
+                border-radius: 10px;
+            }
+        }
 
-     <input type="text" class="electric-input" id="display" readonly>
+        @media (min-width: 1200px) {
+            #display {
+                margin-top: 80px;
+            }
+        }
+    </style>
+</head>
 
-  <button onclick="openEBot()">🤖 E-Bot</button>
+<body>
 
-<div class="buttons" id="calc-buttons">
-    <button class="number-btn" onclick="appendvalue('1')">1</button>
-    <button class="number-btn" onclick="appendvalue('2')">2</button>
-    <button class="number-btn" onclick="appendvalue('3')">3</button>
-    <button class="number-btn" onclick="appendvalue('4')">4</button>
-    <button class="number-btn" onclick="appendvalue('5')">5</button>
+    <input type="text" id="display" readonly>
 
-    <button class="number-btn" onclick="appendvalue('6')">6</button>
-    <button class="number-btn" onclick="appendvalue('7')">7</button>
-    <button class="number-btn" onclick="appendvalue('8')">8</button>
-    <button class="number-btn" onclick="appendvalue('9')">9</button>
-    <button class="number-btn" onclick="appendvalue('0')">0</button>
+    <button id="ebotButton" onclick="openEBot()">
+        <img src="./image/button-bot.jpeg-removebg-preview.png" alt="E-Bot" id="button-bot">
+    </button>
 
-    <button class="number-btn" onclick="appendvalue('.')">.</button>
-    <button class="number-btn" onclick="appendvalue('+')">+</button>
-    <button class="number-btn" onclick="appendvalue('-')">-</button>
-    <button class="number-btn" onclick="appendvalue('*')">×</button>
-    <button class="number-btn" onclick="appendvalue('/')">÷</button>
+    <div class="buttons" id="calc-buttons">
 
-    <button class="number-btn" onclick="appendvalue('(')">(</button>
-    <button class="number-btn" onclick="appendvalue(')')">)</button>
-    <button class="number-btn" onclick="appendvalue('%')">%</button>
-    <button class="number-btn" onclick="deletelast()">⌫</button>
-    <button class="number-btn" onclick="calculate()">=</button>
-</div>   
-</div>
-<button id="menuBtn" onclick="toggleMenu()">☰</button>
+        <button class="number-btn" onclick="appendvalue('1')" data-key="1">1</button>
+        <button class="number-btn" onclick="appendvalue('2')" data-key="2">2</button>
+        <button class="number-btn" onclick="appendvalue('3')" data-key="3">3</button>
+        <button class="number-btn" onclick="appendvalue('+')" data-key="+">+</button>
+        <button class="number-btn" onclick="deletelast()" data-key="Backspace">⌫</button>
 
-<div id="sideMenu">
-    <a href="./QUIZ.html">QUIZ</a>
-    <a href="./GAMES.html">🧩 GAMES</a>
-    <a href="./EBOT.html">🤖 E-BOT</a>
-    <a href="./SETTINGS.html">⚙ SETTINGS</a>
-</div>
+        <button class="number-btn" onclick="appendvalue('4')" data-key="4">4</button>
+        <button class="number-btn" onclick="appendvalue('5')" data-key="5">5</button>
+        <button class="number-btn" onclick="appendvalue('6')" data-key="6">6</button>
+        <button class="number-btn" onclick="appendvalue('-')" data-key="-">−</button>
+        <button class="number-btn" onclick="appendvalue('(')" data-key="(">(</button>
+
+        <button class="number-btn" onclick="appendvalue('7')" data-key="7">7</button>
+        <button class="number-btn" onclick="appendvalue('8')" data-key="8">8</button>
+        <button class="number-btn" onclick="appendvalue('9')" data-key="9">9</button>
+        <button class="number-btn" onclick="appendvalue('*')" data-key="*">×</button>
+        <button class="number-btn" onclick="appendvalue(')')" data-key=")">)</button>
+
+        <button class="number-btn" onclick="appendvalue('0')" data-key="0">0</button>
+        <button class="number-btn" onclick="appendvalue('.')" data-key=".">.</button>
+        <button class="number-btn" onclick="cleardisply()">C</button>
+        <button class="number-btn" onclick="appendvalue('/')" data-key="/">÷</button>
+        <button class="number-btn" onclick="calculate()" data-key="Enter">=</button>
+
+    </div>
+
+    <button id="menuBtn" onclick="toggleMenu()">☰</button>
+
+    <div id="sideMenu">
+        <a href="./QUIZ.html">QUIZ</a>
+        <a href="./GAMES.html">🧩 GAMES</a>
+        <a href="./EBOT.html">🤖 E-BOT</a>
+        <a href="./SETTINGS.html">⚙ SETTINGS</a>
+    </div>
+
     <script>
-        const display = document.getElementById("display")
-        function deletelast(){
-            display.value= display.value.slice(0,-1)
+        const display = document.getElementById("display");
+
+        function deletelast() {
+            display.value = display.value.slice(0, -1);
         }
 
-        function appendvalue(value){
+        function appendvalue(value) {
             display.value += value;
             display.scrollLeft = display.scrollWidth;
         }
 
         function cleardisply() {
-            display.value = ""
+            display.value = "";
         }
 
-function calculate() {
-    try {
-        display.value = eval(display.value);
-    } catch {
-        display.value = "ERROR!";
-        
-        display.classList.add("error");
-        document.querySelector(".buttons").classList.add("shake");
+        function calculate() {
+            try {
+                display.value = eval(display.value);
+            } catch {
+                display.value = "ERROR!";
+                display.classList.add("error");
 
-        setTimeout(function() {
-       display.classList.remove("error");
-       document.querySelector(".buttons").classList.remove("shake");
-            display.value = "";
-        }, 1500);
-    }     
-}
+                setTimeout(function () {
+                    display.classList.remove("error");
+                    display.value = "";
+                }, 1500);
+            }
+        }
 
-const clickSound = new Audio("./click-sound/click-sound.mp3");
+        const clickSound = new Audio("./click-sound/click-sound.mp3");
 
-document.getElementById("calc-buttons").onclick = function() {
-    clickSound.play();
-};
+        document.getElementById("calc-buttons").onclick = function () {
+            clickSound.currentTime = 0;
+            clickSound.play();
+        };
 
-buttons.forEach(function(button) {
-    button.addEventListener("click", function() {
-        clickSound.currentTime = 0;
-        clickSound.play();
-    });
-});
+        function toggleMenu() {
+            document.getElementById("sideMenu").classList.toggle("open");
+            document.getElementById("menuBtn").classList.toggle("open");
+        }
 
-function toggleMenu() {
-    document.getElementById("sideMenu").classList.toggle("open");
-    document.getElementById("menuBtn").classList.toggle("open");
-}
+        function openEBot() {
+            window.location.href = "./EBOT.html";
+        }
 
-    function openEBot() {
-    window.location.href = "ebot.html";
-}
- </script>
-        </head>
-        </body>
-</html> 
+        document.addEventListener("keydown", function (event) {
+            let key = event.key;
+
+            let button = document.querySelector(`[data-key="${key}"]`);
+
+            if (button) {
+                button.click();
+
+                button.classList.add("pressed");
+
+                setTimeout(() => {
+                    button.classList.remove("pressed");
+                }, 100);
+            }
+        });
+    </script>
+
+</body>
+</html>

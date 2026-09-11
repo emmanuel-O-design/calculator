@@ -1,6 +1,44 @@
 exports.handler = async (event) => {
   try {
-    const body = JSON.parse(event.body || "{}");
+    if (event.httpMethod !== "POST") {
+      return {
+        statusCode: 405,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          error: "Method not allowed."
+        })
+      };
+    }
+
+    if (!process.env.GEMINI_API_KEY) {
+      return {
+        statusCode: 500,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          error: "GEMINI_API_KEY is missing from Netlify environment variables."
+        })
+      };
+    }
+
+    let body;
+
+    try {
+      body = JSON.parse(event.body || "{}");
+    } catch {
+      return {
+        statusCode: 400,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          error: "Invalid request data."
+        })
+      };
+    }
 
     const question = body.question || "";
     const image = body.image || null;
@@ -10,20 +48,18 @@ exports.handler = async (event) => {
     if (!question && !image) {
       return {
         statusCode: 400,
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
           error: "Please provide a math question or an image."
         })
       };
     }
 
-    // =====================================
-    // BUILD CONVERSATION HISTORY
-    // =====================================
-
     const contents = [];
 
     for (const message of history) {
-
       if (
         !message ||
         (message.role !== "user" && message.role !== "model")
@@ -31,24 +67,19 @@ exports.handler = async (event) => {
         continue;
       }
 
-      const historyParts = [];
+      const parts = [];
 
-      // Add saved text
       if (
         typeof message.text === "string" &&
         message.text.trim() !== ""
       ) {
-        historyParts.push({
+        parts.push({
           text: message.text
         });
       }
 
-      // Add saved image
-      if (
-        message.image &&
-        message.mimeType
-      ) {
-        historyParts.push({
+      if (message.image && message.mimeType) {
+        parts.push({
           inlineData: {
             mimeType: message.mimeType,
             data: message.image
@@ -56,20 +87,13 @@ exports.handler = async (event) => {
         });
       }
 
-      // Only add the message if it has something
-      if (historyParts.length > 0) {
-
+      if (parts.length > 0) {
         contents.push({
           role: message.role,
-          parts: historyParts
+          parts: parts
         });
-
       }
     }
-
-    // =====================================
-    // CURRENT MESSAGE
-    // =====================================
 
     const currentParts = [];
 
@@ -93,69 +117,70 @@ exports.handler = async (event) => {
       parts: currentParts
     });
 
-    // =====================================
-    // SEND TO GEMINI
-    // =====================================
-
     const response = await fetch(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent",
       {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
           "x-goog-api-key": process.env.GEMINI_API_KEY
         },
-
         body: JSON.stringify({
-
           systemInstruction: {
             parts: [
               {
                 text:
-                  "You are E-Bot, a math assistant. " +
+                  "You are EPMATH-BOT, a mathematics assistant. " +
                   "You ONLY help with mathematics. " +
-                  "Do NOT greet the user automatically. " +
-                  "Answer the user's question directly. " +
-
-                  "Remember the conversation history, including previous math problems and images. " +
-                  "When the user refers to a previous answer, problem, equation, number, image, or result, use the relevant information from the conversation history. " +
-                  "Understand references such as 'that', 'it', 'the previous answer', 'the answer in the picture', and 'now divide it'. " +
-
+                  "Do not greet the user automatically. " +
+                  "Answer the question directly. " +
+                  "Remember the conversation history and use it when the user refers to previous problems, answers, equations, numbers, images, or results. " +
+                  "Understand references such as that, it, the previous answer, the answer in the picture, and now divide it. " +
                   "Use simple, clean, easy-to-read language. " +
-                  "Avoid unnecessary symbols, emojis, hashtags, asterisks, markdown, bullet points, and decorative formatting. " +
-                  "Do not use Markdown formatting. " +
-                  "Write explanations as normal sentences and short paragraphs. " +
-                  "Use mathematical symbols only when they are necessary to show the actual math. " +
-                  "Explain the solution clearly and step by step. " +
-
-                  "You can solve math problems from text or pictures. " +
-                  "Read mathematical expressions, equations, graphs, diagrams, and handwritten math from images when possible. " +
-
-                  "If the user asks about something unrelated to mathematics, politely say that you only help with math."
+                  "Do not use Markdown. " +
+                  "Avoid unnecessary symbols, emojis, hashtags, asterisks, and decorative formatting. " +
+                  "Use mathematical symbols only when necessary. " +
+                  "Explain solutions clearly and step by step. " +
+                  "You can solve math problems from text and pictures. " +
+                  "Read mathematical expressions, equations, graphs, diagrams, and handwritten mathematics from images when possible. " +
+                  "If the user asks something unrelated to mathematics, politely explain that you only help with mathematics."
               }
             ]
           },
-
           contents: contents
-
         })
       }
     );
 
-    // =====================================
-    // READ GEMINI RESPONSE
-    // =====================================
+    const responseText = await response.text();
 
-    const data = await response.json();
+    let data;
+
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      console.error("Invalid Gemini response:", responseText);
+
+      return {
+        statusCode: 502,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          error: "Gemini returned an invalid response.",
+          details: responseText
+        })
+      };
+    }
 
     if (!response.ok) {
-
       console.error("Gemini API error:", data);
 
       return {
         statusCode: response.status,
-
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
           error: "Gemini API error.",
           details: data
@@ -164,30 +189,45 @@ exports.handler = async (event) => {
     }
 
     const answer =
-      data.candidates?.[0]?.content?.parts?.[0]?.text;
+      data.candidates?.[0]?.content?.parts
+        ?.map(part => part.text || "")
+        .join("")
+        .trim();
 
-    // =====================================
-    // SEND ANSWER BACK TO WEBSITE
-    // =====================================
+    if (!answer) {
+      return {
+        statusCode: 500,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          error: "Gemini returned no answer.",
+          details: data
+        })
+      };
+    }
 
     return {
       statusCode: 200,
-
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-        answer:
-          answer || "I couldn't solve that math problem."
+        answer: answer
       })
     };
 
   } catch (error) {
-
     console.error("Function error:", error);
 
     return {
       statusCode: 500,
-
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-        error: "E-Bot couldn't connect right now."
+        error: "EPMATH-BOT couldn't connect right now.",
+        details: error.message
       })
     };
   }

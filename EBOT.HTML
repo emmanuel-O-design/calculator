@@ -6,8 +6,20 @@
     <title>E-Bot</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
         body {
             margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
             min-height: 100vh;
             background: #080808;
             color: white;
@@ -16,54 +28,76 @@
 
         .ebot-header {
             height: 80px;
+            width: 100%;
             display: flex;
             align-items: center;
             padding: 0 25px;
             background: #111;
             border-bottom: 1px solid #333;
+            position: relative;
+            flex-shrink: 0;
         }
 
         .back-btn {
             background: none;
             border: none;
             color: white;
-            font-size: 28px;
+            font-size: clamp(24px, 4vw, 28px);
             cursor: pointer;
             margin-right: 20px;
+            padding: 5px 10px;
+            z-index: 2;
         }
 
         .ebot-title {
             position: absolute;
-            font-size: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(20px, 4vw, 28px);
             font-weight: bold;
-            left: 40%;
+            white-space: nowrap;
+        }
+
+        #exited-bot {
+            position: absolute;
+            width: clamp(55px, 8vw, 90px);
+            height: auto;
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-right: 10px;
         }
 
         .chat-area {
-            height: calc(100vh - 180px);
+            height: calc(100vh - 160px);
+            width: 100%;
             overflow-y: auto;
-            padding: 25px;
+            overflow-x: hidden;
+            padding: clamp(15px, 4vw, 25px);
+            padding-bottom: 30px;
+            scroll-behavior: smooth;
         }
 
         .message {
-            max-width: 75%;
+            width: fit-content;
+            max-width: min(75%, 750px);
             padding: 16px 20px;
             margin-bottom: 18px;
             border-radius: 15px;
-
-            line-height: 1.7;
+            line-height: 1.5;
             white-space: pre-wrap;
-            overflow-wrap: break-word;
-
-            font-size: 16px;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            font-size: clamp(16px, 2vw, 20px);
         }
 
         .bot-message {
             background: #1b1b1b;
             margin-right: auto;
-
             line-height: 1.8;
-            white-space: pre-wrap;
         }
 
         .user-message {
@@ -71,22 +105,42 @@
             margin-left: auto;
         }
 
+        .user-message img {
+            display: block;
+            max-width: min(250px, 60vw);
+            max-height: 250px;
+            width: auto;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        #hello-bot {
+            position: relative;
+            display: block;
+            width: clamp(45px, 8vw, 70px);
+            height: auto;
+            margin-bottom: 0px;
+            left: 200px;
+            left: 45%;
+        }
+
         .input-area {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 80px;
+            min-height: 80px;
             background: #111;
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 0 15px;
-            box-sizing: border-box;
+            padding: 15px;
+            z-index: 10;
         }
 
         .message-input {
             flex: 1;
+            min-width: 0;
             height: 45px;
             border-radius: 25px;
             border: 1px solid #444;
@@ -97,7 +151,12 @@
             outline: none;
         }
 
+        .message-input:focus {
+            border-color: #777;
+        }
+
         .action-btn {
+            flex: 0 0 45px;
             width: 45px;
             height: 45px;
             border-radius: 50%;
@@ -111,6 +170,156 @@
         .send-btn {
             background: #555;
         }
+
+        @media (max-width: 700px) {
+            .ebot-header {
+                height: 70px;
+                padding: 0 10px;
+            }
+
+            .back-btn {
+                margin-right: 5px;
+            }
+
+            .ebot-title {
+                font-size: clamp(17px, 5vw, 22px);
+            }
+
+            #exited-bot {
+                width: 50px;
+                margin-right: 5px;
+            }
+
+            .chat-area {
+                height: calc(100vh - 145px);
+                padding: 15px 10px;
+            }
+
+            .message {
+                max-width: 88%;
+                padding: 12px 15px;
+                margin-bottom: 12px;
+                font-size: 16px;
+            }
+
+            .input-area {
+                min-height: 75px;
+                padding: 10px;
+                gap: 6px;
+            }
+
+            .action-btn {
+                flex: 0 0 40px;
+                width: 40px;
+                height: 40px;
+                font-size: 17px;
+            }
+
+            .message-input {
+                height: 40px;
+                padding: 0 14px;
+                font-size: 15px;
+            }
+
+            #hello-bot {
+                width: 10px;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .ebot-header {
+                height: 65px;
+            }
+
+            .ebot-title {
+                font-size: 17px;
+            }
+
+            #exited-bot {
+                width: 42px;
+                margin-right: 3px;
+            }
+
+            .back-btn {
+                font-size: 23px;
+                padding: 3px 5px;
+            }
+
+            .chat-area {
+                height: calc(100vh - 135px);
+                padding: 12px 8px;
+            }
+
+            .message {
+                max-width: 92%;
+                padding: 10px 12px;
+                border-radius: 12px;
+                font-size: 20px;
+            }
+
+            .input-area {
+                min-height: 70px;
+                padding: 8px;
+                gap: 5px;
+            }
+
+            .action-btn {
+                flex: 0 0 36px;
+                width: 36px;
+                height: 36px;
+                font-size: 15px;
+            }
+
+            .message-input {
+                height: 36px;
+                padding: 0 12px;
+                font-size: 14px;
+            }
+
+            #hello-bot {
+                width: 45px;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .ebot-title {
+                font-size: 15px;
+            }
+
+            #exited-bot {
+                width: 35px;
+            }
+
+            .message {
+                max-width: 95%;
+                font-size: 14px;
+            }
+
+            .input-area {
+                gap: 3px;
+                padding: 6px;
+            }
+
+            .action-btn {
+                flex: 0 0 32px;
+                width: 32px;
+                height: 32px;
+                font-size: 13px;
+            }
+
+            .message-input {
+                height: 32px;
+                font-size: 13px;
+                padding: 0 9px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .chat-area {
+                padding-left: 8%;
+                padding-right: 8%;
+            }
+        }
     </style>
 </head>
 
@@ -121,7 +330,8 @@
         <button class="back-btn" onclick="goBack()">←</button>
 
         <div class="ebot-title">
-            EPMATH-BOT🤖
+            <img src="./image/exited-bot.jpeg" alt="" id="exited-bot">
+            EPMATH-BOT
         </div>
 
     </header>
@@ -130,7 +340,8 @@
     <main class="chat-area" id="chatArea">
 
         <div class="message bot-message">
-            👋 Hi! I'm E-Bot. Ask me anything about mathematics!
+            <img src="./image/bot-hello.jpeg-removebg-preview.png" alt="" id="hello-bot">
+            Hi! I'm EPM-Bot. Ask me anything about mathematics!
         </div>
 
     </main>
@@ -180,10 +391,6 @@ let conversationHistory = [];
 
 
 
-// =============================
-// SEND TEXT / IMAGE TO E-BOT
-// =============================
-
 async function sendMessage(
     question = null,
     imageData = null,
@@ -200,10 +407,6 @@ async function sendMessage(
     }
 
 
-
-    // =============================
-    // SHOW USER TEXT
-    // =============================
 
     if (message !== "") {
 
@@ -223,10 +426,6 @@ async function sendMessage(
     input.value = "";
 
 
-
-    // =============================
-    // SHOW USER IMAGE
-    // =============================
 
     if (imageData) {
 
@@ -259,10 +458,6 @@ async function sendMessage(
     }
 
 
-
-    // =============================
-    // THINKING MESSAGE
-    // =============================
 
     const botMessage =
         document.createElement("div");
@@ -311,10 +506,6 @@ async function sendMessage(
 
 
 
-        // =============================
-        // GET AI RESPONSE
-        // =============================
-
         const data =
             await response.json();
 
@@ -326,11 +517,6 @@ async function sendMessage(
                 data.answer;
 
 
-
-            // =============================
-            // SAVE USER MESSAGE
-            // TEXT + IMAGE TOGETHER
-            // =============================
 
             conversationHistory.push({
 
@@ -348,10 +534,6 @@ async function sendMessage(
 
 
 
-            // =============================
-            // SAVE E-BOT'S ANSWER
-            // =============================
-
             conversationHistory.push({
 
                 role: "model",
@@ -361,10 +543,6 @@ async function sendMessage(
             });
 
 
-
-            // =============================
-            // KEEP MEMORY MANAGEABLE
-            // =============================
 
             if (conversationHistory.length > 10) {
 
@@ -397,7 +575,7 @@ async function sendMessage(
 
 
         botMessage.textContent =
-            "❌ E-Bot couldn't connect right now.";
+            "❌ EPMATH-BOT couldn't connect right now.";
 
     }
 
@@ -408,10 +586,6 @@ async function sendMessage(
 }
 
 
-
-// =============================
-// ENTER KEY
-// =============================
 
 input.addEventListener(
     "keydown",
@@ -427,10 +601,6 @@ input.addEventListener(
 );
 
 
-
-// =============================
-// PICTURE BUTTON
-// =============================
 
 pictureBtn.addEventListener(
     "click",
@@ -458,8 +628,6 @@ pictureBtn.addEventListener(
                 }
 
 
-
-                // Make sure it is an image
 
                 if (!file.type.startsWith("image/")) {
 
@@ -511,10 +679,6 @@ pictureBtn.addEventListener(
 );
 
 
-
-// =============================
-// MICROPHONE BUTTON
-// =============================
 
 const SpeechRecognition =
     window.SpeechRecognition ||
@@ -652,4 +816,3 @@ if (SpeechRecognition) {
 
 </body>
 </html>
-
