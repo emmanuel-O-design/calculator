@@ -4,266 +4,287 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>calculator</title>
+<style>
+* {
+    box-sizing: border-box;
+}
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
 
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
+body {
+    min-height: 100vh;
+    height: 100vh;
+    background-image: url("./image/ChatGPT Image Aug 29, 2026, 02_59_17 PM.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
 
-        body {
-            min-height: 100vh;
-            height: 100vh;
-            background-image: url("./image/ChatGPT Image Aug 29, 2026, 02_59_17 PM.png");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-        }
+#display {
+    width: min(550px, 94vw);
+    height: clamp(65px, 12vh, 100px);
+    border-radius: 30px;
+    display: block;
+    margin: clamp(70px, 10vh, 100px) auto 25px;
+    font-size: clamp(30px, 5vw, 50px);
+    padding: 10px 20px;
+    text-align: right;
+    overflow-x: auto;
+    white-space: nowrap;
+    border: 2px solid cyan;
+    outline: none;
+    animation: electric 1.5s infinite;
+}
 
-        #display {
-            width: min(550px, 94vw);
-            height: clamp(65px, 12vh, 100px);
-            border-radius: 30px;
-            display: block;
-            margin: clamp(70px, 10vh, 100px) auto 25px;
-            font-size: clamp(30px, 5vw, 50px);
-            padding: 10px 20px;
-            text-align: right;
-            overflow-x: auto;
-            white-space: nowrap;
-            border: 2px solid cyan;
-            outline: none;
-            animation: electric 1.5s infinite;
-        }
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: clamp(5px, 1vw, 10px);
+    width: min(521px, 94vw);
+    margin: 0 auto;
+}
 
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: clamp(5px, 1vw, 10px);
-            width: min(521px, 94vw);
-            margin: 0 auto;
-        }
+.number-btn {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: white;
+    border: 2px solid transparent;
+    border-radius: clamp(12px, 3vw, 20px);
+    font-size: clamp(18px, 4vw, 30px);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
 
-        .number-btn {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            background-color: white;
-            border: 2px solid transparent;
-            border-radius: clamp(12px, 3vw, 20px);
-            font-size: clamp(18px, 4vw, 30px);
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
+.number-btn:hover {
+    animation: buttonElectric 1.5s infinite;
+}
 
-        .number-btn:hover {
-            animation: buttonElectric 1.5s infinite;
-        }
+.number-btn:active,
+.number-btn.pressed {
+    transform: scale(0.92);
+}
 
-        .number-btn:active,
-        .number-btn.pressed {
-            transform: scale(0.92);
-        }
+.error {
+    animation: shake 0.4s, errorBlink 0.5s infinite;
+    border: 3px solid red !important;
+}
 
-        .error {
-            animation: shake 0.4s, errorBlink 0.5s infinite;
-            border: 3px solid red !important;
-        }
+@keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+    100% { transform: translateX(0); }
+}
 
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            20% { transform: translateX(-8px); }
-            40% { transform: translateX(8px); }
-            60% { transform: translateX(-6px); }
-            80% { transform: translateX(6px); }
-            100% { transform: translateX(0); }
-        }
+@keyframes errorBlink {
+    0%, 100% {
+        box-shadow: 0 0 5px red;
+    }
+    50% {
+        box-shadow: 0 0 25px red;
+    }
+}
 
-        @keyframes errorBlink {
-            0%, 100% {
-                box-shadow: 0 0 5px red;
-            }
-            50% {
-                box-shadow: 0 0 25px red;
-            }
-        }
+@keyframes electric {
+    0% {
+        border-color: cyan;
+        box-shadow: 0 0 5px cyan;
+    }
 
-        @keyframes electric {
-            0% {
-                border-color: cyan;
-                box-shadow: 0 0 5px cyan;
-            }
+    25% {
+        border-color: #00ff88;
+        box-shadow: 0 0 8px #00ff88;
+    }
 
-            25% {
-                border-color: #00ff88;
-                box-shadow: 0 0 8px #00ff88;
-            }
+    50% {
+        border-color: #9d00ff;
+        box-shadow: 0 0 5px #9d00ff;
+    }
 
-            50% {
-                border-color: #9d00ff;
-                box-shadow: 0 0 5px #9d00ff;
-            }
+    75% {
+        border-color: #ff0080;
+        box-shadow: 0 0 8px #ff0080;
+    }
 
-            75% {
-                border-color: #ff0080;
-                box-shadow: 0 0 8px #ff0080;
-            }
+    100% {
+        border-color: cyan;
+        box-shadow: 0 0 5px cyan;
+    }
+}
 
-            100% {
-                border-color: cyan;
-                box-shadow: 0 0 5px cyan;
-            }
-        }
+@keyframes buttonElectric {
+    0% {
+        border-color: cyan;
+        box-shadow: 0 0 5px cyan;
+    }
 
-        @keyframes buttonElectric {
-            0% {
-                border-color: cyan;
-                box-shadow: 0 0 5px cyan;
-            }
+    25% {
+        border-color: #00ff88;
+        box-shadow: 0 0 8px #00ff88;
+    }
 
-            25% {
-                border-color: #00ff88;
-                box-shadow: 0 0 8px #00ff88;
-            }
+    50% {
+        border-color: #9d00ff;
+        box-shadow: 0 0 5px #9d00ff;
+    }
 
-            50% {
-                border-color: #9d00ff;
-                box-shadow: 0 0 5px #9d00ff;
-            }
+    75% {
+        border-color: #ff0080;
+        box-shadow: 0 0 8px #ff0080;
+    }
 
-            75% {
-                border-color: #ff0080;
-                box-shadow: 0 0 8px #ff0080;
-            }
+    100% {
+        border-color: cyan;
+        box-shadow: 0 0 5px cyan;
+    }
+}
 
-            100% {
-                border-color: cyan;
-                box-shadow: 0 0 5px cyan;
-            }
-        }
+#menuBtn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 25px;
+    cursor: pointer;
+    transition: left 0.4s ease;
+}
 
-        #menuBtn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1001;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 25px;
-            cursor: pointer;
-            transition: left 0.4s ease;
-        }
+#menuBtn.open {
+    left: 270px;
+}
 
-        #menuBtn.open {
-            left: 270px;
-        }
+#sideMenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background: #000;
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+    z-index: 1000;
+    padding-top: 80px;
+}
 
-        #sideMenu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            height: 100vh;
-            background: #000;
-            transform: translateX(-100%);
-            transition: transform 0.4s ease;
-            z-index: 1000;
-            padding-top: 80px;
-        }
+#sideMenu.open {
+    transform: translateX(0);
+}
 
-        #sideMenu.open {
-            transform: translateX(0);
-        }
+#sideMenu a {
+    display: block;
+    padding: 20px;
+    color: white;
+    text-decoration: none;
+}
 
-        #sideMenu a {
-            display: block;
-            padding: 20px;
-            color: white;
-            text-decoration: none;
-        }
+#ebotButton {
+    position: fixed;
+    right: clamp(10px, 2vw, 25px);
+    bottom: clamp(10px, 2vw, 25px);
+    width: clamp(60px, 10vw, 100px);
+    height: clamp(60px, 10vw, 100px);
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 999;
+}
 
-        #ebotButton {
-            position: fixed;
-            right: clamp(10px, 2vw, 25px);
-            bottom: clamp(10px, 2vw, 25px);
-            width: clamp(60px, 10vw, 100px);
-            height: clamp(60px, 10vw, 100px);
-            padding: 0;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 999;
-        }
+#button-bot {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: 50%;
+}
 
-        #button-bot {
-            width: 100%;
-            height: 100%;
-            display: block;
-            object-fit: cover;
-            border-radius: 50%;
-        }
+@media (max-width: 600px) {
+    #display {
+        width: 94vw;
+        height: 75px;
+        margin-top: 70px;
+        margin-bottom: 20px;
+        font-size: 34px;
+        padding: 10px 16px;
+    }
 
-        @media (max-width: 600px) {
-            #display {
-                width: 94vw;
-                margin-top: 70px;
-                margin-bottom: 20px;
-            }
+    .buttons {
+        width: 94vw;
+        gap: 7px;
+    }
 
-            .buttons {
-                width: 94vw;
-                gap: 5px;
-            }
+    .number-btn {
+        border-radius: 14px;
+        font-size: 25px;
+    }
 
-            .number-btn {
-                border-radius: 14px;
-                font-size: 22px;
-            }
+    #sideMenu {
+        width: 80vw;
+    }
 
-            #sideMenu {
-                width: 80vw;
-            }
+    #menuBtn.open {
+        left: 82vw;
+    }
 
-            #menuBtn.open {
-                left: 82vw;
-            }
-        }
+    #ebotButton {
+        width: 75px;
+        height: 75px;
+        right: 12px;
+        bottom: 12px;
+    }
+}
 
-        @media (max-width: 350px) {
-            #display {
-                width: 92vw;
-                font-size: 25px;
-            }
+@media (max-width: 350px) {
+    #display {
+        width: 93vw;
+        height: 70px;
+        margin-top: 65px;
+        font-size: 30px;
+    }
 
-            .buttons {
-                width: 92vw;
-                gap: 4px;
-            }
+    .buttons {
+        width: 93vw;
+        gap: 5px;
+    }
 
-            .number-btn {
-                font-size: 18px;
-                border-radius: 10px;
-            }
-        }
+    .number-btn {
+        font-size: 23px;
+        border-radius: 11px;
+    }
 
-        @media (min-width: 1200px) {
-            #display {
-                margin-top: 80px;
-            }
-        }
-    </style>
+    #ebotButton {
+        width: 68px;
+        height: 68px;
+        right: 10px;
+        bottom: 10px;
+    }
+}
+
+@media (min-width: 1200px) {
+    #display {
+        margin-top: 80px;
+    }
+}
+</style>
+
+
 </head>
 
 <body>

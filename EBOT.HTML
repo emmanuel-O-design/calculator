@@ -4,323 +4,332 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Bot</title>
+<style>
+* {
+    box-sizing: border-box;
+}
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
 
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
+body {
+    min-height: 100vh;
+    background: #080808;
+    color: white;
+    font-family: Arial, sans-serif;
+}
 
-        body {
-            min-height: 100vh;
-            background: #080808;
-            color: white;
-            font-family: Arial, sans-serif;
-        }
+.ebot-header {
+    height: 80px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 25px;
+    background: #111;
+    border-bottom: 1px solid #333;
+    position: relative;
+    flex-shrink: 0;
+}
 
-        .ebot-header {
-            height: 80px;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            padding: 0 25px;
-            background: #111;
-            border-bottom: 1px solid #333;
-            position: relative;
-            flex-shrink: 0;
-        }
+.back-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    margin-right: 20px;
+    padding: 5px 10px;
+    z-index: 2;
+}
 
-        .back-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: clamp(24px, 4vw, 28px);
-            cursor: pointer;
-            margin-right: 20px;
-            padding: 5px 10px;
-            z-index: 2;
-        }
+.ebot-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: bold;
+    white-space: nowrap;
+}
 
-        .ebot-title {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: clamp(20px, 4vw, 28px);
-            font-weight: bold;
-            white-space: nowrap;
-        }
+#exited-bot {
+    position: absolute;
+    width: 75px;
+    height: auto;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 10px;
+}
 
-        #exited-bot {
-            position: absolute;
-            width: clamp(55px, 8vw, 90px);
-            height: auto;
-            right: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-            margin-right: 10px;
-        }
+.chat-area {
+    height: calc(100vh - 160px);
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 25px;
+    padding-bottom: 30px;
+    scroll-behavior: smooth;
+}
 
-        .chat-area {
-            height: calc(100vh - 160px);
-            width: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: clamp(15px, 4vw, 25px);
-            padding-bottom: 30px;
-            scroll-behavior: smooth;
-        }
+.message {
+    width: fit-content;
+    max-width: min(75%, 750px);
+    padding: 16px 20px;
+    margin-bottom: 18px;
+    border-radius: 15px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    font-size: 20px;
+}
 
-        .message {
-            width: fit-content;
-            max-width: min(75%, 750px);
-            padding: 16px 20px;
-            margin-bottom: 18px;
-            border-radius: 15px;
-            line-height: 1.5;
-            white-space: pre-wrap;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-            font-size: clamp(16px, 2vw, 20px);
-        }
+.bot-message {
+    background: #1b1b1b;
+    margin-right: auto;
+    line-height: 1.8;
+}
 
-        .bot-message {
-            background: #1b1b1b;
-            margin-right: auto;
-            line-height: 1.8;
-        }
+.user-message {
+    background: #333;
+    margin-left: auto;
+}
 
-        .user-message {
-            background: #333;
-            margin-left: auto;
-        }
+.user-message img {
+    display: block;
+    max-width: min(250px, 60vw);
+    max-height: 250px;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+}
 
-        .user-message img {
-            display: block;
-            max-width: min(250px, 60vw);
-            max-height: 250px;
-            width: auto;
-            height: auto;
-            border-radius: 10px;
-        }
+#hello-bot {
+    position: relative;
+    display: block;
+    width: 65px;
+    height: auto;
+    margin-bottom: 0;
+    left: 45%;
+}
 
-        #hello-bot {
-            position: relative;
-            display: block;
-            width: clamp(45px, 8vw, 70px);
-            height: auto;
-            margin-bottom: 0px;
-            left: 200px;
-            left: 45%;
-        }
+.input-area {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    min-height: 80px;
+    background: #111;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    z-index: 10;
+}
 
-        .input-area {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            min-height: 80px;
-            background: #111;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            z-index: 10;
-        }
+.message-input {
+    flex: 1;
+    min-width: 0;
+    height: 48px;
+    border-radius: 25px;
+    border: 1px solid #444;
+    background: #222;
+    color: white;
+    padding: 0 18px;
+    font-size: 18px;
+    outline: none;
+}
 
-        .message-input {
-            flex: 1;
-            min-width: 0;
-            height: 45px;
-            border-radius: 25px;
-            border: 1px solid #444;
-            background: #222;
-            color: white;
-            padding: 0 18px;
-            font-size: 16px;
-            outline: none;
-        }
+.message-input:focus {
+    border-color: #777;
+}
 
-        .message-input:focus {
-            border-color: #777;
-        }
+.action-btn {
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: #222;
+    color: white;
+    font-size: 21px;
+    cursor: pointer;
+}
 
-        .action-btn {
-            flex: 0 0 45px;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: none;
-            background: #222;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-        }
+.send-btn {
+    background: #555;
+}
 
-        .send-btn {
-            background: #555;
-        }
+@media (max-width: 700px) {
+    .ebot-header {
+        height: 70px;
+        padding: 0 12px;
+    }
 
-        @media (max-width: 700px) {
-            .ebot-header {
-                height: 70px;
-                padding: 0 10px;
-            }
+    .back-btn {
+        font-size: 27px;
+        margin-right: 5px;
+    }
 
-            .back-btn {
-                margin-right: 5px;
-            }
+    .ebot-title {
+        font-size: 22px;
+    }
 
-            .ebot-title {
-                font-size: clamp(17px, 5vw, 22px);
-            }
+    #exited-bot {
+        width: 55px;
+        margin-right: 6px;
+    }
 
-            #exited-bot {
-                width: 50px;
-                margin-right: 5px;
-            }
+    .chat-area {
+        height: calc(100vh - 145px);
+        padding: 15px 12px;
+    }
 
-            .chat-area {
-                height: calc(100vh - 145px);
-                padding: 15px 10px;
-            }
+    .message {
+        max-width: 88%;
+        padding: 14px 16px;
+        margin-bottom: 12px;
+        font-size: 18px;
+    }
 
-            .message {
-                max-width: 88%;
-                padding: 12px 15px;
-                margin-bottom: 12px;
-                font-size: 16px;
-            }
+    .input-area {
+        min-height: 75px;
+        padding: 10px;
+        gap: 7px;
+    }
 
-            .input-area {
-                min-height: 75px;
-                padding: 10px;
-                gap: 6px;
-            }
+    .action-btn {
+        flex: 0 0 44px;
+        width: 44px;
+        height: 44px;
+        font-size: 19px;
+    }
 
-            .action-btn {
-                flex: 0 0 40px;
-                width: 40px;
-                height: 40px;
-                font-size: 17px;
-            }
+    .message-input {
+        height: 44px;
+        padding: 0 15px;
+        font-size: 17px;
+    }
 
-            .message-input {
-                height: 40px;
-                padding: 0 14px;
-                font-size: 15px;
-            }
+    #hello-bot {
+        width: 60px;
+        left: 45%;
+    }
+}
 
-            #hello-bot {
-                width: 10px;
-            }
-        }
+@media (max-width: 450px) {
+    .ebot-header {
+        height: 65px;
+        padding: 0 8px;
+    }
 
-        @media (max-width: 450px) {
-            .ebot-header {
-                height: 65px;
-            }
+    .ebot-title {
+        font-size: 19px;
+    }
 
-            .ebot-title {
-                font-size: 17px;
-            }
+    #exited-bot {
+        width: 48px;
+        margin-right: 4px;
+    }
 
-            #exited-bot {
-                width: 42px;
-                margin-right: 3px;
-            }
+    .back-btn {
+        font-size: 25px;
+        padding: 3px 5px;
+    }
 
-            .back-btn {
-                font-size: 23px;
-                padding: 3px 5px;
-            }
+    .chat-area {
+        height: calc(100vh - 135px);
+        padding: 12px 8px;
+    }
 
-            .chat-area {
-                height: calc(100vh - 135px);
-                padding: 12px 8px;
-            }
+    .message {
+        max-width: 92%;
+        padding: 12px 14px;
+        border-radius: 12px;
+        font-size: 18px;
+        line-height: 1.6;
+    }
 
-            .message {
-                max-width: 92%;
-                padding: 10px 12px;
-                border-radius: 12px;
-                font-size: 20px;
-            }
+    .input-area {
+        min-height: 70px;
+        padding: 8px;
+        gap: 5px;
+    }
 
-            .input-area {
-                min-height: 70px;
-                padding: 8px;
-                gap: 5px;
-            }
+    .action-btn {
+        flex: 0 0 42px;
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
+    }
 
-            .action-btn {
-                flex: 0 0 36px;
-                width: 36px;
-                height: 36px;
-                font-size: 15px;
-            }
+    .message-input {
+        height: 42px;
+        padding: 0 13px;
+        font-size: 16px;
+    }
 
-            .message-input {
-                height: 36px;
-                padding: 0 12px;
-                font-size: 14px;
-            }
+    #hello-bot {
+        width: 55px;
+        left: 42%;
+    }
+}
 
-            #hello-bot {
-                width: 45px;
-            }
-        }
+@media (max-width: 350px) {
+    .ebot-title {
+        font-size: 17px;
+    }
 
-        @media (max-width: 350px) {
-            .ebot-title {
-                font-size: 15px;
-            }
+    #exited-bot {
+        width: 42px;
+    }
 
-            #exited-bot {
-                width: 35px;
-            }
+    .message {
+        max-width: 95%;
+        font-size: 17px;
+        padding: 11px 13px;
+    }
 
-            .message {
-                max-width: 95%;
-                font-size: 14px;
-            }
+    .input-area {
+        gap: 4px;
+        padding: 7px;
+    }
 
-            .input-area {
-                gap: 3px;
-                padding: 6px;
-            }
+    .action-btn {
+        flex: 0 0 39px;
+        width: 39px;
+        height: 39px;
+        font-size: 17px;
+    }
 
-            .action-btn {
-                flex: 0 0 32px;
-                width: 32px;
-                height: 32px;
-                font-size: 13px;
-            }
+    .message-input {
+        height: 39px;
+        font-size: 15px;
+        padding: 0 10px;
+    }
 
-            .message-input {
-                height: 32px;
-                font-size: 13px;
-                padding: 0 9px;
-            }
-        }
+    #hello-bot {
+        width: 50px;
+    }
+}
 
-        @media (min-width: 1200px) {
-            .chat-area {
-                padding-left: 8%;
-                padding-right: 8%;
-            }
-        }
-    </style>
+@media (min-width: 1200px) {
+    .chat-area {
+        padding-left: 8%;
+        padding-right: 8%;
+    }
+}
+</style>
+
 </head>
 
 <body>
