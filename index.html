@@ -64,6 +64,16 @@ body {
     transition: transform 0.1s ease;
 }
 
+#move-left{
+  width: 70px;
+  height: 70px;
+  border-radius: 100px;
+  position: absolute;
+  top: 55%;
+  left: 75%;
+  border: none;
+}
+
 .number-btn:hover {
     animation: buttonElectric 1.5s infinite;
 }
@@ -322,7 +332,6 @@ body {
         <button class="number-btn" onclick="calculate()" data-key="Enter">=</button>
 
     </div>
-
     <button id="menuBtn" onclick="toggleMenu()">☰</button>
 
     <div id="sideMenu">
