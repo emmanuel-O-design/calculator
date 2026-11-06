@@ -1,32 +1,157 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Coming Soon</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100%;
+            margin: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .background {
+            position: fixed;
+            inset: 0;
+            background-image: url("./image/ChatGPT Image Sep 13, 2026, 01_23_16 PM (1).png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            animation: background-glitch 7s infinite;
+            will-change: transform, filter;
+        }
+
+        .background::before,
+        .background::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: inherit;
+            background-size: inherit;
+            background-position: inherit;
+            background-repeat: inherit;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .background::before {
+            animation: red-glitch 7s infinite;
+        }
+
+        .background::after {
+            animation: cyan-glitch 7s infinite;
+        }
+
+        .comingsoon {
+            position: absolute;
+            top: 20%;
+            left: 15%;
+            max-width: 70%;
+            height: auto;
+            z-index: 2;
+        }
+
+        @keyframes background-glitch {
+            0%, 89%, 90%, 92%, 100% {
+                transform: translateX(0);
+                filter: none;
+            }
+
+            89.2% {
+                transform: translateX(-2px);
+                filter: contrast(1.1);
+            }
+
+            89.5% {
+                transform: translateX(2px);
+                filter: brightness(1.08);
+            }
+
+            90.5% {
+                transform: translateX(-1px);
+                filter: contrast(1.05);
+            }
+        }
+
+        @keyframes red-glitch {
+            0%, 89%, 90%, 92%, 100% {
+                opacity: 0;
+                clip-path: inset(0 0 0 0);
+                transform: translateX(0);
+            }
+
+            89.2% {
+                opacity: 0.3;
+                clip-path: inset(25% 0 65% 0);
+                transform: translateX(-5px);
+            }
+
+            89.5% {
+                opacity: 0;
+            }
+
+            90.5% {
+                opacity: 0.25;
+                clip-path: inset(68% 0 20% 0);
+                transform: translateX(-3px);
+            }
+        }
+
+        @keyframes cyan-glitch {
+            0%, 89%, 90%, 92%, 100% {
+                opacity: 0;
+                clip-path: inset(0 0 0 0);
+                transform: translateX(0);
+            }
+
+            89.3% {
+                opacity: 0.3;
+                clip-path: inset(48% 0 42% 0);
+                transform: translateX(5px);
+            }
+
+            89.7% {
+                opacity: 0;
+            }
+
+            91% {
+                opacity: 0.2;
+                clip-path: inset(15% 0 76% 0);
+                transform: translateX(3px);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .background,
+            .background::before,
+            .background::after {
+                animation: none;
+            }
+        }
+    </style>
 </head>
-<style>
-    html, body {
-    width: 100%;
-    min-height: 100%;
-    margin: 0;
-}
 
-body {
-    background-image: url("./image/ChatGPT\ Image\ Sep\ 13\,\ 2026\,\ 01_23_16\ PM\ \(1\).png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}
-
-.comingsoon{
-    position: absolute;
-    top: 20%;
-    left: 15%;
-}
-</style>
 <body>
-    <img src="./image/coming soon.png" alt="" class="comingsoon">
+    <div class="background"></div>
+
+    <img
+        src="./image/coming soon.png"
+        alt="Coming Soon"
+        class="comingsoon"
+    >
 </body>
 </html>
+     

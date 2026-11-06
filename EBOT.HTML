@@ -1,828 +1,658 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Bot</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MACPHILL AI 💗</title>
+
 <style>
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+:root {
+    --pink: #ff65b7;
+    --purple: #a66cff;
+    --dark-purple: #6335a5;
+    --light-pink: #fff0f8;
+    --text: #493052;
 }
 
 body {
     min-height: 100vh;
-    background: #080808;
-    color: white;
-    font-family: Arial, sans-serif;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%, #ffd4ed, transparent 35%),
+        radial-gradient(circle at 90% 90%, #d9c4ff, transparent 40%),
+        linear-gradient(135deg, #fff5fb, #f0e5ff);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
 }
 
-.ebot-header {
-    height: 80px;
+.chat-container {
     width: 100%;
+    max-width: 950px;
+    height: 92vh;
+    min-height: 500px;
+    background: rgba(255,255,255,0.88);
+    border: 1px solid rgba(255,255,255,0.9);
+    border-radius: 28px;
+    box-shadow: 0 15px 55px rgba(133,75,160,0.18);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    backdrop-filter: blur(15px);
+}
+
+.header {
+    min-height: 85px;
+    padding: 15px 22px;
     display: flex;
     align-items: center;
-    padding: 0 25px;
-    background: #111;
-    border-bottom: 1px solid #333;
-    position: relative;
-    flex-shrink: 0;
+    gap: 15px;
+    background: linear-gradient(110deg, #ff83c5, #b58aff);
+    color: white;
+    box-shadow: 0 4px 15px rgba(180,100,200,0.2);
 }
 
 .back-btn {
-    background: none;
     border: none;
+    background: rgba(255,255,255,0.2);
     color: white;
-    font-size: 28px;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    font-size: 23px;
     cursor: pointer;
-    margin-right: 20px;
-    padding: 5px 10px;
-    z-index: 2;
+    transition: 0.2s;
 }
 
-.ebot-title {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    font-weight: bold;
-    white-space: nowrap;
+.back-btn:hover {
+    background: rgba(255,255,255,0.35);
+    transform: translateX(-3px);
 }
 
-#exited-bot {
-    position: absolute;
-    width: 75px;
-    height: auto;
-    right: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-right: 10px;
+.header img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    background: white;
+    border-radius: 50%;
+    padding: 4px;
+}
+
+.header-info h1 {
+    font-size: 23px;
+    letter-spacing: 2px;
+    font-weight: 800;
+}
+
+.header-info p {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-top: 3px;
+}
+
+.status {
+    margin-left: auto;
+    font-size: 12px;
+    background: rgba(255,255,255,0.2);
+    padding: 8px 12px;
+    border-radius: 20px;
 }
 
 .chat-area {
-    height: calc(100vh - 160px);
-    width: 100%;
+    flex: 1;
     overflow-y: auto;
-    overflow-x: hidden;
     padding: 25px;
-    padding-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
     scroll-behavior: smooth;
 }
 
-.message {
-    width: fit-content;
-    max-width: min(75%, 750px);
-    padding: 16px 20px;
-    margin-bottom: 18px;
-    border-radius: 15px;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    font-size: 20px;
+.chat-area::-webkit-scrollbar {
+    width: 6px;
 }
 
-.bot-message {
-    background: none;
-    margin-right: auto;
-    padding: 5px 0;
-    line-height: 1.8;
-    border-radius: 0;
-}
-
-.user-message {
-    background: #333;
-    margin-left: auto;
-}
-
-.user-message img {
-    display: block;
-    max-width: min(250px, 60vw);
-    max-height: 250px;
-    width: auto;
-    height: auto;
+.chat-area::-webkit-scrollbar-thumb {
+    background: #e2b5ed;
     border-radius: 10px;
 }
 
-#hello-bot {
-    position: relative;
-    display: block;
-    width: 65px;
-    height: auto;
-    margin-bottom: 0;
-    left: 45%;
+.welcome {
+    text-align: center;
+    margin: auto;
+    max-width: 400px;
+    padding: 20px;
 }
 
-.input-area {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    min-height: 80px;
-    background: #111;
+.welcome img {
+    width: 125px;
+    height: 125px;
+    object-fit: contain;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 8px 12px rgba(180,100,200,0.2));
+}
+
+.welcome h2 {
+    font-size: 25px;
+    color: #a34baf;
+    margin-bottom: 9px;
+}
+
+.welcome p {
+    color: #987d9f;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.message {
     display: flex;
+    gap: 10px;
+    max-width: 85%;
+    align-items: flex-end;
+    animation: appear 0.25s ease;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.message.bot {
+    align-self: flex-start;
+}
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #ffe0f2;
+    padding: 3px;
+}
+
+.bubble {
+    padding: 13px 17px;
+    border-radius: 19px;
+    font-size: 14px;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.user .bubble {
+    background: linear-gradient(135deg, #ff80bf, #b57bff);
+    color: white;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 5px 15px rgba(190,100,190,0.15);
+}
+
+.bot .bubble {
+    background: #fff0f8;
+    color: #563b62;
+    border: 1px solid #f6d8ed;
+    border-bottom-left-radius: 5px;
+}
+
+.bubble img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin-top: 8px;
+}
+
+.typing {
+    color: #a66cff;
+    font-size: 13px;
+    padding: 5px;
+    display: none;
+}
+
+.input-section {
+    padding: 15px 20px 20px;
+    background: rgba(255,245,251,0.9);
+    border-top: 1px solid #f4dced;
+}
+
+.preview {
+    display: none;
+    margin-bottom: 10px;
     align-items: center;
     gap: 10px;
-    padding: 15px;
-    z-index: 10;
 }
 
-.message-input {
-    flex: 1;
-    min-width: 0;
-    height: 48px;
-    border-radius: 25px;
-    border: 1px solid #444;
-    background: #222;
-    color: white;
-    padding: 0 18px;
-    font-size: 18px;
-    outline: none;
+.preview img {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
-.message-input:focus {
-    border-color: #777;
-}
-
-.action-btn {
-    flex: 0 0 48px;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
+.preview button {
     border: none;
-    background: #222;
+    background: #ff65a9;
     color: white;
-    font-size: 21px;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
     cursor: pointer;
 }
 
+.input-box {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: white;
+    border: 2px solid #f3d6ed;
+    border-radius: 22px;
+    padding: 8px 10px;
+    box-shadow: 0 5px 20px rgba(150,80,160,0.08);
+    transition: 0.2s;
+}
+
+.input-box:focus-within {
+    border-color: #d18aff;
+    box-shadow: 0 0 0 4px rgba(190,130,255,0.12);
+}
+
+.input-box textarea {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    resize: none;
+    background: transparent;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 5px;
+    max-height: 120px;
+}
+
+.input-box textarea::placeholder {
+    color: #b79bb8;
+}
+
+.action-btn {
+    width: 39px;
+    height: 39px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 14px;
+    background: #fce4f4;
+    color: #a34ca8;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.action-btn:hover {
+    background: #f5c8e8;
+    transform: translateY(-2px);
+}
+
 .send-btn {
-    background: #555;
+    background: linear-gradient(135deg, #ff72b8, #a96cff);
+    color: white;
+    font-size: 17px;
 }
 
-@media (max-width: 700px) {
-    .ebot-header {
-        height: 70px;
-        padding: 0 12px;
+.send-btn:hover {
+    background: linear-gradient(135deg, #f34ca5, #9052e9);
+    box-shadow: 0 4px 12px rgba(170,90,220,0.3);
+}
+
+.send-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.footer-text {
+    text-align: center;
+    font-size: 11px;
+    color: #b18eae;
+    margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 0;
     }
 
-    .back-btn {
-        font-size: 27px;
-        margin-right: 5px;
+    .chat-container {
+        height: 100dvh;
+        min-height: 0;
+        border-radius: 0;
     }
 
-    .ebot-title {
-        font-size: 22px;
+    .header {
+        min-height: 72px;
+        padding: 10px 13px;
+        gap: 10px;
     }
 
-    #exited-bot {
-        width: 55px;
-        margin-right: 6px;
+    .header img {
+        width: 43px;
+        height: 43px;
     }
 
-    .chat-area {
-        height: calc(100vh - 145px);
-        padding: 15px 12px;
-    }
-
-    .message {
-        max-width: 88%;
-        padding: 14px 16px;
-        margin-bottom: 12px;
-        font-size: 18px;
-    }
-
-    .input-area {
-        min-height: 75px;
-        padding: 10px;
-        gap: 7px;
-    }
-
-    .action-btn {
-        flex: 0 0 44px;
-        width: 44px;
-        height: 44px;
+    .header-info h1 {
         font-size: 19px;
     }
 
-    .message-input {
-        height: 44px;
-        padding: 0 15px;
-        font-size: 17px;
-    }
-
-    #hello-bot {
-        width: 60px;
-        left: 45%;
-    }
-}
-
-@media (max-width: 450px) {
-    .ebot-header {
-        height: 65px;
-        padding: 0 8px;
-    }
-
-    .ebot-title {
-        font-size: 19px;
-    }
-
-    #exited-bot {
-        width: 48px;
-        margin-right: 4px;
-    }
-
-    .back-btn {
-        font-size: 25px;
-        padding: 3px 5px;
+    .status {
+        font-size: 10px;
+        padding: 6px 8px;
     }
 
     .chat-area {
-        height: calc(100vh - 135px);
-        padding: 12px 8px;
+        padding: 17px 12px;
     }
 
     .message {
         max-width: 92%;
-        padding: 12px 14px;
-        border-radius: 12px;
-        font-size: 18px;
-        line-height: 1.6;
     }
 
-    .input-area {
-        min-height: 70px;
-        padding: 8px;
+    .input-section {
+        padding: 10px 10px 14px;
+    }
+
+    .input-box {
         gap: 5px;
+        padding: 6px;
     }
 
     .action-btn {
-        flex: 0 0 42px;
-        width: 42px;
-        height: 42px;
-        font-size: 18px;
-    }
-
-    .message-input {
-        height: 42px;
-        padding: 0 13px;
-        font-size: 16px;
-    }
-
-    #hello-bot {
-        width: 55px;
-        left: 42%;
-    }
-}
-
-@media (max-width: 350px) {
-    .ebot-title {
-        font-size: 17px;
-    }
-
-    #exited-bot {
-        width: 42px;
-    }
-
-    .message {
-        max-width: 95%;
-        font-size: 17px;
-        padding: 11px 13px;
-    }
-
-    .input-area {
-        gap: 4px;
-        padding: 7px;
-    }
-
-    .action-btn {
-        flex: 0 0 39px;
-        width: 39px;
-        height: 39px;
-        font-size: 17px;
-    }
-
-    .message-input {
-        height: 39px;
-        font-size: 15px;
-        padding: 0 10px;
-    }
-
-    #hello-bot {
-        width: 50px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .chat-area {
-        padding-left: 8%;
-        padding-right: 8%;
+        width: 35px;
+        height: 35px;
     }
 }
 </style>
-
 </head>
 
 <body>
 
-    <header class="ebot-header">
+<div class="chat-container">
 
+    <header class="header">
         <button class="back-btn" onclick="goBack()">←</button>
 
-        <div class="ebot-title">
-            <img src="./image/exited-bot.jpeg" alt="" id="exited-bot">
-            EPMATH-BOT
+        <img src="./image/exited-bot.jpeg" alt="MACPHILL logo">
+
+        <div class="header-info">
+            <h1>MAC-BOT</h1>
+            <p>Your AI bestie ✨</p>
         </div>
 
+        <div class="status">● Online</div>
     </header>
-
 
     <main class="chat-area" id="chatArea">
 
-        <div class="message bot-message">
-            <img src="./image/bot-hello.jpeg-removebg-preview.png" alt="" id="hello-bot">
-            Hi! I'm EPM-Bot. Ask me anything about mathematics!
+        <div class="welcome" id="welcome">
+            <img src="./image/Neon Macphill Wink Mascot (1).png" alt="MACPHILL bot">
+            <h2>Heyyy! Welcome to MAC-BOT 💗</h2>
+            <p>
+                I'm your AI bestie! Ask me questions, learn something new,
+                share pictures, or just have a little chat with me. ✨
+            </p>
         </div>
 
     </main>
 
+    <div class="typing" id="typing">MACPHILL is typing... 💜</div>
 
-    <div class="input-area">
+    <section class="input-section">
 
-        <button class="action-btn" id="pictureBtn">
-            📷
-        </button>
+        <div class="preview" id="preview">
+            <img id="previewImage" alt="Selected image">
+            <button onclick="removeImage()">×</button>
+            <span style="font-size:12px;color:#a34ca8;">Image attached 💗</span>
+        </div>
 
-        <button class="action-btn" id="micBtn">
-            🎤
-        </button>
+        <div class="input-box">
 
-        <input
-            type="text"
-            class="message-input"
-            id="messageInput"
-            placeholder="Ask a math question..."
-        >
+            <input type="file" id="imageInput" accept="image/*" hidden>
 
-        <button
-            class="action-btn send-btn"
-            onclick="sendMessage()"
-        >
-            ➤
-        </button>
+            <button class="action-btn" id="pictureBtn" title="Add a picture">📷</button>
 
-    </div>
+            <button class="action-btn" id="micBtn" title="Voice input">🎤</button>
 
+            <textarea
+                id="messageInput"
+                rows="1"
+                placeholder="Message MACPHILL... 💗"
+            ></textarea>
+
+            <button class="action-btn send-btn" id="sendBtn" title="Send message">➤</button>
+
+        </div>
+
+        <p class="footer-text">Made with 💗 • MACPHILL AI</p>
+
+    </section>
+
+</div>
 
 <script>
+const chatArea = document.getElementById("chatArea");
+const messageInput = document.getElementById("messageInput");
+const sendBtn = document.getElementById("sendBtn");
+const pictureBtn = document.getElementById("pictureBtn");
+const imageInput = document.getElementById("imageInput");
+const micBtn = document.getElementById("micBtn");
+const typing = document.getElementById("typing");
+const welcome = document.getElementById("welcome");
+
+let conversationHistory = [];
+let selectedImage = null;
+let selectedMimeType = null;
 
 function goBack() {
     window.location.href = "index.html";
 }
 
+function scrollToBottom() {
+    chatArea.scrollTop = chatArea.scrollHeight;
+}
 
-const input = document.getElementById("messageInput");
-const chatArea = document.getElementById("chatArea");
-const pictureBtn = document.getElementById("pictureBtn");
-const micBtn = document.getElementById("micBtn");
+function addMessage(text, sender, image = null) {
+    if (welcome) {
+        welcome.style.display = "none";
+    }
 
+    const message = document.createElement("div");
+    message.className = `message ${sender}`;
 
-let conversationHistory = [];
+    const avatar = document.createElement("img");
+    avatar.className = "avatar";
+    avatar.src = sender === "bot"
+        ? "./image/exited-bot.jpeg"
+        : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23ffc4e4'/%3E%3Ctext x='20' y='27' text-anchor='middle' font-size='22'%3E%F0%9F%91%A9%3C/text%3E%3C/svg%3E";
 
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
 
+    bubble.textContent = text || "";
 
-async function sendMessage(
-    question = null,
-    imageData = null,
-    mimeType = null
-) {
+    if (image) {
+        const img = document.createElement("img");
+        img.src = image;
+        img.alt = "Uploaded picture";
+        bubble.appendChild(document.createElement("br"));
+        bubble.appendChild(img);
+    }
 
-    const message = question !== null
-        ? question.trim()
-        : input.value.trim();
+    message.appendChild(avatar);
+    message.appendChild(bubble);
+    chatArea.appendChild(message);
 
+    scrollToBottom();
+}
 
-    if (message === "" && !imageData) {
+async function sendMessage() {
+    const question = messageInput.value.trim();
+
+    if (!question && !selectedImage) return;
+
+    const imageToSend = selectedImage;
+    const mimeTypeToSend = selectedMimeType;
+
+    addMessage(question || "Can you look at this picture? 💗", "user", imageToSend);
+
+    messageInput.value = "";
+    messageInput.style.height = "auto";
+
+    removeImage();
+
+    conversationHistory.push({
+        role: "user",
+        parts: [{ text: question || "Please look at this image and help me with it." }]
+    });
+
+    typing.style.display = "block";
+    sendBtn.disabled = true;
+    scrollToBottom();
+
+    try {
+        const response = await fetch("/.netlify/functions/ask-ai", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                question: question || "Please look at this image and help me with it.",
+                image: imageToSend ? imageToSend.split(",")[1] : null,
+                mimeType: mimeTypeToSend,
+                history: conversationHistory.slice(0, -1)
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Something went wrong.");
+        }
+
+        const answer = data.answer || "Oops! I couldn't generate a response.";
+
+        conversationHistory.push({
+            role: "model",
+            parts: [{ text: answer }]
+        });
+
+        conversationHistory = conversationHistory.slice(-10);
+
+        addMessage(answer, "bot");
+
+    } catch (error) {
+        addMessage("Oops! MACPHILL couldn't connect right now. Please try again. 💗", "bot");
+        console.error(error);
+    }
+
+    typing.style.display = "none";
+    sendBtn.disabled = false;
+    messageInput.focus();
+}
+
+sendBtn.addEventListener("click", sendMessage);
+
+messageInput.addEventListener("keydown", function(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+    }
+});
+
+messageInput.addEventListener("input", function() {
+    this.style.height = "auto";
+    this.style.height = Math.min(this.scrollHeight, 120) + "px";
+});
+
+pictureBtn.addEventListener("click", () => {
+    imageInput.click();
+});
+
+imageInput.addEventListener("change", function() {
+    const file = this.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+        alert("Please select an image file.");
         return;
     }
 
-
-
-    if (message !== "") {
-
-        const userMessage =
-            document.createElement("div");
-
-        userMessage.className =
-            "message user-message";
-
-        userMessage.textContent = message;
-
-        chatArea.appendChild(userMessage);
-    }
-
-
-
-    input.value = "";
-
-
-
-    if (imageData) {
-
-        const imageMessage =
-            document.createElement("div");
-
-        imageMessage.className =
-            "message user-message";
-
-
-        const img =
-            document.createElement("img");
-
-
-        img.src =
-            "data:" +
-            mimeType +
-            ";base64," +
-            imageData;
-
-
-        img.style.maxWidth = "250px";
-        img.style.maxHeight = "250px";
-        img.style.borderRadius = "10px";
-
-
-        imageMessage.appendChild(img);
-
-        chatArea.appendChild(imageMessage);
-    }
-
-
-
-    const botMessage =
-        document.createElement("div");
-
-    botMessage.className =
-        "message bot-message";
-
-    botMessage.textContent =
-        "🤔 E-Bot is thinking...";
-
-
-    chatArea.appendChild(botMessage);
-
-    chatArea.scrollTop =
-        chatArea.scrollHeight;
-
-
-
-    try {
-
-        const response =
-            await fetch(
-                "/.netlify/functions/ask-ai",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-
-                        question: message,
-
-                        image: imageData,
-
-                        mimeType: mimeType,
-
-                        history:
-                            conversationHistory
-
-                    })
-                }
-            );
-
-
-
-        const data =
-            await response.json();
-
-
-
-        if (data.answer) {
-
-            botMessage.textContent =
-                data.answer;
-
-
-
-            conversationHistory.push({
-
-                role: "user",
-
-                text: message,
-
-                image:
-                    imageData || null,
-
-                mimeType:
-                    mimeType || null
-
-            });
-
-
-
-            conversationHistory.push({
-
-                role: "model",
-
-                text: data.answer
-
-            });
-
-
-
-            if (conversationHistory.length > 10) {
-
-                conversationHistory =
-                    conversationHistory.slice(-10);
-
-            }
-
-
-        } else {
-
-            console.error(
-                "E-Bot error:",
-                data
-            );
-
-
-            botMessage.textContent =
-                "❌ Sorry, I couldn't solve that.";
-
-        }
-
-
-    } catch (error) {
-
-        console.error(
-            "Connection error:",
-            error
-        );
-
-
-        botMessage.textContent =
-            "❌ EPMATH-BOT couldn't connect right now.";
-
-    }
-
-
-    chatArea.scrollTop =
-        chatArea.scrollHeight;
-
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        selectedImage = event.target.result;
+        selectedMimeType = file.type;
+
+        document.getElementById("previewImage").src = selectedImage;
+        document.getElementById("preview").style.display = "flex";
+    };
+
+    reader.readAsDataURL(file);
+});
+
+function removeImage() {
+    selectedImage = null;
+    selectedMimeType = null;
+    imageInput.value = "";
+    document.getElementById("preview").style.display = "none";
 }
-
-
-
-input.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (event.key === "Enter") {
-
-            sendMessage();
-
-        }
-
-    }
-);
-
-
-
-pictureBtn.addEventListener(
-    "click",
-    function() {
-
-        const fileInput =
-            document.createElement("input");
-
-
-        fileInput.type = "file";
-
-        fileInput.accept =
-            "image/*";
-
-
-        fileInput.onchange =
-            function(event) {
-
-                const file =
-                    event.target.files[0];
-
-
-                if (!file) {
-                    return;
-                }
-
-
-
-                if (!file.type.startsWith("image/")) {
-
-                    alert(
-                        "Please select an image."
-                    );
-
-                    return;
-                }
-
-
-
-                const reader =
-                    new FileReader();
-
-
-
-                reader.onload =
-                    function() {
-
-                        const base64 =
-                            reader.result
-                                .split(",")[1];
-
-
-
-                        sendMessage(
-
-                            "Solve the math problem in this image. Show me the steps.",
-
-                            base64,
-
-                            file.type
-
-                        );
-
-                    };
-
-
-
-                reader.readAsDataURL(file);
-
-            };
-
-
-        fileInput.click();
-
-    }
-);
-
-
 
 const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-
+    window.SpeechRecognition || window.webkitSpeechRecognition;
 
 if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
 
-    const recognition =
-        new SpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
 
+    micBtn.addEventListener("click", () => {
+        recognition.start();
+        micBtn.textContent = "🔴";
+    });
 
-    recognition.lang =
-        "en-US";
+    recognition.onresult = function(event) {
+        messageInput.value += event.results[0][0].transcript;
+        messageInput.dispatchEvent(new Event("input"));
+    };
 
+    recognition.onend = function() {
+        micBtn.textContent = "🎤";
+    };
 
-    recognition.continuous =
-        false;
-
-
-    recognition.interimResults =
-        false;
-
-
-
-    micBtn.addEventListener(
-        "click",
-        function() {
-
-            try {
-
-                recognition.start();
-
-                micBtn.textContent =
-                    "🔴";
-
-                micBtn.title =
-                    "Listening...";
-
-            } catch (error) {
-
-                console.log(
-                    "Microphone already running."
-                );
-
-            }
-
-        }
-    );
-
-
-
-    recognition.onresult =
-        function(event) {
-
-            const spokenText =
-                event.results[0][0]
-                    .transcript;
-
-
-            input.value =
-                spokenText;
-
-
-            sendMessage(
-                spokenText
-            );
-
-        };
-
-
-
-    recognition.onend =
-        function() {
-
-            micBtn.textContent =
-                "🎤";
-
-            micBtn.title =
-                "Voice input";
-
-        };
-
-
-
-    recognition.onerror =
-        function(event) {
-
-            console.error(
-                "Speech recognition error:",
-                event.error
-            );
-
-
-            micBtn.textContent =
-                "🎤";
-
-
-            micBtn.title =
-                "Voice input";
-
-
-
-            if (
-                event.error ===
-                "not-allowed"
-            ) {
-
-                alert(
-                    "Please allow microphone access for E-Bot."
-                );
-
-            }
-
-        };
-
-
+    recognition.onerror = function() {
+        micBtn.textContent = "🎤";
+    };
 } else {
-
-    micBtn.addEventListener(
-        "click",
-        function() {
-
-            alert(
-                "Voice input is not supported by this browser. Try Google Chrome or Microsoft Edge."
-            );
-
-        }
-    );
-
+    micBtn.addEventListener("click", () => {
+        alert("Voice input is not supported in this browser.");
+    });
 }
-
 </script>
 
 </body>
